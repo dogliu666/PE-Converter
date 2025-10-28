@@ -1,83 +1,70 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>体测成绩计算器</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    (function () {
-      const root = document.documentElement;
-      const storageKey = 'theme-preference';
-      const supportsMatchMedia = typeof window.matchMedia === 'function';
-      const mediaQuery = supportsMatchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
-      let storedTheme = null;
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>体测成绩计算器</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      (function () {
+        const root = document.documentElement;
+        const storageKey = "theme-preference";
+        const supportsMatchMedia = typeof window.matchMedia === "function";
+        const mediaQuery = supportsMatchMedia
+          ? window.matchMedia("(prefers-color-scheme: dark)")
+          : null;
+        let storedTheme = null;
 
-      try {
-        storedTheme = localStorage.getItem(storageKey);
-      } catch (error) {
-        storedTheme = null;
+        try {
+          storedTheme = localStorage.getItem(storageKey);
+        } catch (error) {
+          storedTheme = null;
+        }
+
+        const resolvedTheme =
+          storedTheme === "light" || storedTheme === "dark"
+            ? storedTheme
+            : "auto";
+
+        const prefersDark = mediaQuery ? mediaQuery.matches : false;
+
+        if (resolvedTheme === "dark") {
+          root.setAttribute("data-theme", "dark");
+          root.style.colorScheme = "dark";
+        } else if (resolvedTheme === "light") {
+          root.setAttribute("data-theme", "light");
+          root.style.colorScheme = "light";
+        } else {
+          root.removeAttribute("data-theme");
+          root.style.colorScheme = prefersDark ? "dark" : "light";
+        }
+
+        root.dataset.appliedTheme = resolvedTheme;
+      })();
+    </script>
+    <style>
+      :root {
+        color-scheme: light;
+        --color-bg-page: #f1f5f9;
+        --color-bg-surface: #ffffff;
+        --color-bg-muted: #f8fafc;
+        --color-text-primary: #0f172a;
+        --color-text-secondary: #334155;
+        --color-text-muted: #475569;
+        --color-text-faded: #64748b;
+        --color-border: #cbd5e1;
+        --color-border-strong: #94a3b8;
+        --color-input-bg: #ffffff;
+        --color-input-text: #0f172a;
+        --color-input-placeholder: #94a3b8;
+        --color-table-stripe: rgba(15, 23, 42, 0.04);
       }
 
-      const resolvedTheme = storedTheme === 'light' || storedTheme === 'dark' ? storedTheme : 'auto';
-
-      const prefersDark = mediaQuery ? mediaQuery.matches : false;
-
-      if (resolvedTheme === 'dark') {
-        root.setAttribute('data-theme', 'dark');
-        root.style.colorScheme = 'dark';
-      } else if (resolvedTheme === 'light') {
-        root.setAttribute('data-theme', 'light');
-        root.style.colorScheme = 'light';
-      } else {
-        root.removeAttribute('data-theme');
-        root.style.colorScheme = prefersDark ? 'dark' : 'light';
+      :root[data-theme="light"] {
+        color-scheme: light;
       }
 
-      root.dataset.appliedTheme = resolvedTheme;
-    })();
-  </script>
-  <style>
-    :root {
-      color-scheme: light;
-      --color-bg-page: #f1f5f9;
-      --color-bg-surface: #ffffff;
-      --color-bg-muted: #f8fafc;
-      --color-text-primary: #0f172a;
-      --color-text-secondary: #334155;
-      --color-text-muted: #475569;
-      --color-text-faded: #64748b;
-      --color-border: #cbd5e1;
-      --color-border-strong: #94a3b8;
-      --color-input-bg: #ffffff;
-      --color-input-text: #0f172a;
-      --color-input-placeholder: #94a3b8;
-      --color-table-stripe: rgba(15, 23, 42, 0.04);
-    }
-
-    :root[data-theme='light'] {
-      color-scheme: light;
-    }
-
-    :root[data-theme='dark'] {
-      color-scheme: dark;
-      --color-bg-page: #0f172a;
-      --color-bg-surface: #1e293b;
-      --color-bg-muted: #1e293b;
-      --color-text-primary: #e2e8f0;
-      --color-text-secondary: #cbd5f5;
-      --color-text-muted: #94a3b8;
-      --color-text-faded: #64748b;
-      --color-border: #334155;
-      --color-border-strong: #475569;
-      --color-input-bg: #0b1220;
-      --color-input-text: #e2e8f0;
-      --color-input-placeholder: #7c8aa9;
-      --color-table-stripe: rgba(148, 163, 184, 0.08);
-    }
-
-    @media (prefers-color-scheme: dark) {
-      :root:not([data-theme='light']) {
+      :root[data-theme="dark"] {
         color-scheme: dark;
         --color-bg-page: #0f172a;
         --color-bg-surface: #1e293b;
@@ -93,1934 +80,2182 @@
         --color-input-placeholder: #7c8aa9;
         --color-table-stripe: rgba(148, 163, 184, 0.08);
       }
-    }
 
-    body {
-      background-color: var(--color-bg-page);
-      color: var(--color-text-primary);
-    }
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) {
+          color-scheme: dark;
+          --color-bg-page: #0f172a;
+          --color-bg-surface: #1e293b;
+          --color-bg-muted: #1e293b;
+          --color-text-primary: #e2e8f0;
+          --color-text-secondary: #cbd5f5;
+          --color-text-muted: #94a3b8;
+          --color-text-faded: #64748b;
+          --color-border: #334155;
+          --color-border-strong: #475569;
+          --color-input-bg: #0b1220;
+          --color-input-text: #e2e8f0;
+          --color-input-placeholder: #7c8aa9;
+          --color-table-stripe: rgba(148, 163, 184, 0.08);
+        }
+      }
 
-    .bg-slate-100 {
-      background-color: var(--color-bg-page) !important;
-    }
+      body {
+        background-color: var(--color-bg-page);
+        color: var(--color-text-primary);
+      }
 
-    .bg-white {
-      background-color: var(--color-bg-surface) !important;
-    }
+      .bg-slate-100 {
+        background-color: var(--color-bg-page) !important;
+      }
 
-    .bg-slate-50 {
-      background-color: var(--color-bg-muted) !important;
-    }
+      .bg-white {
+        background-color: var(--color-bg-surface) !important;
+      }
 
-    .text-slate-900,
-    .text-slate-800 {
-      color: var(--color-text-primary) !important;
-    }
+      .bg-slate-50 {
+        background-color: var(--color-bg-muted) !important;
+      }
 
-    .text-slate-700 {
-      color: var(--color-text-secondary) !important;
-    }
+      .text-slate-900,
+      .text-slate-800 {
+        color: var(--color-text-primary) !important;
+      }
 
-    .text-slate-600 {
-      color: var(--color-text-muted) !important;
-    }
+      .text-slate-700 {
+        color: var(--color-text-secondary) !important;
+      }
 
-    :root[data-theme='dark'] .text-indigo-700 {
-      color: #c7d2fe !important;
-    }
+      .text-slate-600 {
+        color: var(--color-text-muted) !important;
+      }
 
-    @media (prefers-color-scheme: dark) {
-      :root:not([data-theme='light']) .text-indigo-700 {
+      :root[data-theme="dark"] .text-indigo-700 {
         color: #c7d2fe !important;
       }
-    }
 
-    :root[data-theme='dark'] .bg-indigo-50 {
-      background-color: rgba(99, 102, 241, 0.16) !important;
-    }
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) .text-indigo-700 {
+          color: #c7d2fe !important;
+        }
+      }
 
-    @media (prefers-color-scheme: dark) {
-      :root:not([data-theme='light']) .bg-indigo-50 {
+      :root[data-theme="dark"] .bg-indigo-50 {
         background-color: rgba(99, 102, 241, 0.16) !important;
       }
-    }
 
-    :root[data-theme='dark'] .border-indigo-100 {
-      border-color: rgba(99, 102, 241, 0.35) !important;
-    }
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) .bg-indigo-50 {
+          background-color: rgba(99, 102, 241, 0.16) !important;
+        }
+      }
 
-    @media (prefers-color-scheme: dark) {
-      :root:not([data-theme='light']) .border-indigo-100 {
+      :root[data-theme="dark"] .border-indigo-100 {
         border-color: rgba(99, 102, 241, 0.35) !important;
       }
-    }
 
-    .border-slate-200,
-    .border-slate-300 {
-      border-color: var(--color-border) !important;
-    }
-
-    .divide-slate-200 > :not([hidden]) ~ :not([hidden]) {
-      border-color: var(--color-border) !important;
-    }
-
-    input,
-    select,
-    textarea {
-      background-color: var(--color-input-bg);
-      color: var(--color-input-text);
-    }
-
-    input::placeholder,
-    textarea::placeholder {
-      color: var(--color-input-placeholder);
-      opacity: 1;
-    }
-
-    .shadow {
-      box-shadow: 0 10px 15px -3px rgba(15, 23, 42, 0.1), 0 4px 6px -4px rgba(15, 23, 42, 0.1);
-    }
-
-    :root[data-theme='dark'] .shadow {
-      box-shadow: 0 18px 30px -12px rgba(15, 23, 42, 0.7), 0 8px 12px -8px rgba(15, 23, 42, 0.6);
-    }
-
-    @media (prefers-color-scheme: dark) {
-      :root:not([data-theme='light']) .shadow {
-        box-shadow: 0 18px 30px -12px rgba(15, 23, 42, 0.7), 0 8px 12px -8px rgba(15, 23, 42, 0.6);
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) .border-indigo-100 {
+          border-color: rgba(99, 102, 241, 0.35) !important;
+        }
       }
-    }
-  </style>
-</head>
-<body class="min-h-screen bg-slate-100 text-slate-900">
-  <main class="mx-auto flex min-h-screen max-w-5xl flex-col gap-8 px-4 py-8">
-    <div class="flex justify-end">
-      <button
-        id="themeToggle"
-        type="button"
-        class="inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 transition hover:border-indigo-500 hover:text-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-        aria-label="切换主题"
-      >
-        跟随系统
-      </button>
-    </div>
-    <header class="text-center">
-      <h1 class="text-3xl font-semibold text-slate-900 sm:text-4xl">大学生体测成绩计算器</h1>
-    </header>
 
-    <section class="rounded-xl bg-white p-6 shadow">
-      <h2 class="text-lg font-medium text-slate-800">基本信息与成绩录入</h2>
-      <div class="mt-4 grid gap-4 sm:grid-cols-2">
-        <div class="flex flex-col gap-2 sm:col-span-2">
-          <span class="text-sm font-medium text-slate-700">性别</span>
-          <div class="flex flex-wrap gap-4 text-sm" role="radiogroup">
-            <label class="flex items-center gap-2">
-              <input type="radio" name="sex" value="male" checked onclick="change()" class="h-4 w-4 border-slate-300 text-indigo-600 focus:ring-indigo-500">
-              <span>男生</span>
-            </label>
-            <label class="flex items-center gap-2">
-              <input type="radio" name="sex" value="female" onclick="change()" class="h-4 w-4 border-slate-300 text-indigo-600 focus:ring-indigo-500">
-              <span>女生</span>
-            </label>
+      .border-slate-200,
+      .border-slate-300 {
+        border-color: var(--color-border) !important;
+      }
+
+      .divide-slate-200 > :not([hidden]) ~ :not([hidden]) {
+        border-color: var(--color-border) !important;
+      }
+
+      input,
+      select,
+      textarea {
+        background-color: var(--color-input-bg);
+        color: var(--color-input-text);
+      }
+
+      input::placeholder,
+      textarea::placeholder {
+        color: var(--color-input-placeholder);
+        opacity: 1;
+      }
+
+      .shadow {
+        box-shadow: 0 10px 15px -3px rgba(15, 23, 42, 0.1),
+          0 4px 6px -4px rgba(15, 23, 42, 0.1);
+      }
+
+      :root[data-theme="dark"] .shadow {
+        box-shadow: 0 18px 30px -12px rgba(15, 23, 42, 0.7),
+          0 8px 12px -8px rgba(15, 23, 42, 0.6);
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) .shadow {
+          box-shadow: 0 18px 30px -12px rgba(15, 23, 42, 0.7),
+            0 8px 12px -8px rgba(15, 23, 42, 0.6);
+        }
+      }
+    </style>
+  </head>
+  <body class="min-h-screen bg-slate-100 text-slate-900">
+    <main class="mx-auto flex min-h-screen max-w-5xl flex-col gap-8 px-4 py-8">
+      <div class="flex justify-end">
+        <button
+          id="themeToggle"
+          type="button"
+          class="inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 transition hover:border-indigo-500 hover:text-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          aria-label="切换主题"
+        >
+          跟随系统
+        </button>
+      </div>
+      <header class="text-center">
+        <h1 class="text-3xl font-semibold text-slate-900 sm:text-4xl">
+          大学生体测成绩计算器
+        </h1>
+      </header>
+
+      <section class="rounded-xl bg-white p-6 shadow">
+        <h2 class="text-lg font-medium text-slate-800">基本信息与成绩录入</h2>
+        <div class="mt-4 grid gap-4 sm:grid-cols-2">
+          <div class="flex flex-col gap-2 sm:col-span-2">
+            <span class="text-sm font-medium text-slate-700">性别</span>
+            <div class="flex flex-wrap gap-4 text-sm" role="radiogroup">
+              <label class="flex items-center gap-2">
+                <input
+                  type="radio"
+                  name="sex"
+                  value="male"
+                  checked
+                  onclick="change()"
+                  class="h-4 w-4 border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                />
+                <span>男生</span>
+              </label>
+              <label class="flex items-center gap-2">
+                <input
+                  type="radio"
+                  name="sex"
+                  value="female"
+                  onclick="change()"
+                  class="h-4 w-4 border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                />
+                <span>女生</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="flex flex-col gap-2 sm:col-span-2">
+            <span class="text-sm font-medium text-slate-700">年级</span>
+            <div class="flex flex-wrap gap-4 text-sm" role="radiogroup">
+              <label class="flex items-center gap-2">
+                <input
+                  type="radio"
+                  name="grades"
+                  value="grade1"
+                  checked
+                  class="h-4 w-4 border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                />
+                <span>大一 / 大二</span>
+              </label>
+              <label class="flex items-center gap-2">
+                <input
+                  type="radio"
+                  name="grades"
+                  value="grade2"
+                  class="h-4 w-4 border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                />
+                <span>大三 / 大四</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="flex flex-col gap-2">
+            <label for="height" class="text-sm font-medium text-slate-700"
+              >身高 (m)</label
+            >
+            <input
+              id="height"
+              type="text"
+              name="heights"
+              placeholder="1.75"
+              onkeyup="only_num(this)"
+              onblur="only_num(this)"
+              class="rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+            />
+          </div>
+
+          <div class="flex flex-col gap-2">
+            <label for="weight" class="text-sm font-medium text-slate-700"
+              >体重 (kg)</label
+            >
+            <input
+              id="weight"
+              type="text"
+              name="weights"
+              placeholder="68"
+              onkeyup="only_num(this)"
+              onblur="only_num(this)"
+              class="rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+            />
+          </div>
+
+          <div class="flex flex-col gap-2">
+            <label for="breath" class="text-sm font-medium text-slate-700"
+              >肺活量 (毫升)</label
+            >
+            <input
+              id="breath"
+              type="text"
+              name="breaths"
+              placeholder="3500"
+              onkeyup="onlyNumber(this)"
+              onblur="onlyNumber(this)"
+              class="rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+            />
+          </div>
+
+          <div class="flex flex-col gap-2">
+            <label for="shortrun" class="text-sm font-medium text-slate-700"
+              >50 米跑 (秒)</label
+            >
+            <input
+              id="shortrun"
+              type="text"
+              name="shortruns"
+              placeholder="7.2"
+              onkeyup="only_num(this)"
+              onblur="only_num(this)"
+              class="rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+            />
+          </div>
+
+          <div class="flex flex-col gap-2">
+            <label for="reach" class="text-sm font-medium text-slate-700"
+              >坐位体前屈 (cm)</label
+            >
+            <input
+              id="reach"
+              type="text"
+              name="reachs"
+              placeholder="15.0"
+              onkeyup="only_num(this)"
+              onblur="only_num(this)"
+              class="rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+            />
+          </div>
+
+          <div class="flex flex-col gap-2">
+            <label for="jump" class="text-sm font-medium text-slate-700"
+              >立定跳远 (cm)</label
+            >
+            <input
+              id="jump"
+              type="text"
+              name="jumps"
+              placeholder="220"
+              onkeyup="onlyNumber(this)"
+              onblur="onlyNumber(this)"
+              class="rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+            />
+          </div>
+
+          <div id="pullup" class="flex flex-col gap-2">
+            <label for="pullupInput" class="text-sm font-medium text-slate-700"
+              >引体向上 (次)</label
+            >
+            <input
+              id="pullupInput"
+              type="text"
+              name="pullups"
+              placeholder="12"
+              onkeyup="onlyNumber(this)"
+              onblur="onlyNumber(this)"
+              class="rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+            />
+          </div>
+
+          <div id="situp" class="hidden flex flex-col gap-2">
+            <label for="situpInput" class="text-sm font-medium text-slate-700"
+              >1 分钟仰卧起坐 (次)</label
+            >
+            <input
+              id="situpInput"
+              type="text"
+              name="situps"
+              placeholder="40"
+              onkeyup="onlyNumber(this)"
+              onblur="onlyNumber(this)"
+              class="rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+            />
+          </div>
+
+          <div id="1000run" class="flex flex-col gap-2">
+            <label for="run1000Input" class="text-sm font-medium text-slate-700"
+              >1000 米跑 (分.秒)</label
+            >
+            <input
+              id="run1000Input"
+              type="text"
+              name="1000runs"
+              placeholder="3.45"
+              onkeyup="only_num(this)"
+              onblur="only_num(this)"
+              class="rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+            />
+          </div>
+
+          <div id="800run" class="hidden flex flex-col gap-2">
+            <label for="run800Input" class="text-sm font-medium text-slate-700"
+              >800 米跑 (分.秒)</label
+            >
+            <input
+              id="run800Input"
+              type="text"
+              name="800runs"
+              placeholder="3.30"
+              onkeyup="only_num(this)"
+              onblur="only_num(this)"
+              class="rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+            />
+          </div>
+
+          <input type="hidden" name="BMIs" />
+        </div>
+        <div class="mt-6 flex flex-wrap items-center justify-between gap-3">
+          <button
+            id="compute"
+            type="button"
+            onclick="calculate()"
+            class="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-2"
+          >
+            计算成绩
+          </button>
+          <div class="text-sm text-slate-600">
+            提示： <code>3.45</code> 表示 3 分 45 秒。
           </div>
         </div>
+      </section>
 
-        <div class="flex flex-col gap-2 sm:col-span-2">
-          <span class="text-sm font-medium text-slate-700">年级</span>
-          <div class="flex flex-wrap gap-4 text-sm" role="radiogroup">
-            <label class="flex items-center gap-2">
-              <input type="radio" name="grades" value="grade1" checked class="h-4 w-4 border-slate-300 text-indigo-600 focus:ring-indigo-500">
-              <span>大一 / 大二</span>
-            </label>
-            <label class="flex items-center gap-2">
-              <input type="radio" name="grades" value="grade2" class="h-4 w-4 border-slate-300 text-indigo-600 focus:ring-indigo-500">
-              <span>大三 / 大四</span>
-            </label>
+      <section class="rounded-xl bg-white p-6 shadow">
+        <h2 class="text-lg font-medium text-slate-800">成绩汇总</h2>
+        <div class="mt-4 overflow-x-auto">
+          <table
+            class="min-w-full table-fixed border border-slate-200 text-left text-sm"
+          >
+            <thead class="bg-slate-50 text-slate-700">
+              <tr>
+                <th
+                  class="w-1/3 border-b border-slate-200 px-4 py-3 font-medium"
+                >
+                  单项指标
+                </th>
+                <th
+                  class="w-1/5 border-b border-slate-200 px-4 py-3 font-medium"
+                >
+                  成绩
+                </th>
+                <th
+                  class="w-1/5 border-b border-slate-200 px-4 py-3 font-medium"
+                >
+                  得分
+                </th>
+                <th
+                  class="w-1/5 border-b border-slate-200 px-4 py-3 font-medium"
+                >
+                  等级
+                </th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-200 text-slate-700">
+              <tr>
+                <td class="px-4 py-3">BMI (kg/m<sup>2</sup>)</td>
+                <td id="bmi-value" class="px-4 py-3 text-slate-600">-</td>
+                <td id="bmi-score" class="px-4 py-3">-</td>
+                <td id="bmi-level" class="px-4 py-3">-</td>
+              </tr>
+              <tr>
+                <td class="px-4 py-3">肺活量 (毫升)</td>
+                <td id="breath-value" class="px-4 py-3 text-slate-600">-</td>
+                <td id="breath-score" class="px-4 py-3">-</td>
+                <td id="breath-level" class="px-4 py-3">-</td>
+              </tr>
+              <tr>
+                <td class="px-4 py-3">50m 跑</td>
+                <td id="sprint-value" class="px-4 py-3 text-slate-600">-</td>
+                <td id="sprint-score" class="px-4 py-3">-</td>
+                <td id="sprint-level" class="px-4 py-3">-</td>
+              </tr>
+              <tr>
+                <td class="px-4 py-3">坐位体前屈 (cm)</td>
+                <td id="sitreach-value" class="px-4 py-3 text-slate-600">-</td>
+                <td id="sitreach-score" class="px-4 py-3">-</td>
+                <td id="sitreach-level" class="px-4 py-3">-</td>
+              </tr>
+              <tr>
+                <td class="px-4 py-3">立定跳远 (cm)</td>
+                <td id="longjump-value" class="px-4 py-3 text-slate-600">-</td>
+                <td id="longjump-score" class="px-4 py-3">-</td>
+                <td id="longjump-level" class="px-4 py-3">-</td>
+              </tr>
+              <tr>
+                <td class="px-4 py-3">引体向上 / 1min 仰卧起坐</td>
+                <td id="strength-value" class="px-4 py-3 text-slate-600">-</td>
+                <td id="strength-score" class="px-4 py-3">-</td>
+                <td id="strength-level" class="px-4 py-3">-</td>
+              </tr>
+              <tr>
+                <td class="px-4 py-3">1000m / 800m</td>
+                <td id="endurance-value" class="px-4 py-3 text-slate-600">-</td>
+                <td id="endurance-score" class="px-4 py-3">-</td>
+                <td id="endurance-level" class="px-4 py-3">-</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div
+          class="mt-6 grid gap-3 rounded-lg border border-indigo-100 bg-indigo-50 px-4 py-3 sm:grid-cols-3"
+        >
+          <div class="text-sm text-slate-600">
+            附加分：<span
+              id="addition-score"
+              class="font-semibold text-indigo-700"
+              >0</span
+            >
+          </div>
+          <div class="text-sm text-slate-600">
+            总分：<span
+              id="result"
+              class="text-lg font-semibold text-indigo-700"
+              >0.0</span
+            >
+          </div>
+          <div class="text-sm text-slate-600">
+            综合等级：<span
+              id="total-level"
+              class="font-semibold text-indigo-700"
+              >-</span
+            >
           </div>
         </div>
+      </section>
+    </main>
 
-        <div class="flex flex-col gap-2">
-          <label for="height" class="text-sm font-medium text-slate-700">身高 (m)</label>
-          <input id="height" type="text" name="heights" placeholder="1.75" onkeyup="only_num(this)" onblur="only_num(this)" class="rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200">
-        </div>
+    <script>
+      const themeStorageKey = "theme-preference";
+      const themeToggleButton = document.getElementById("themeToggle");
+      const themeLabels = {
+        auto: "跟随系统",
+        light: "浅色模式",
+        dark: "深色模式",
+      };
+      const themeSequence = ["auto", "light", "dark"];
+      const supportsMatchMedia = typeof window.matchMedia === "function";
+      const darkMediaQuery = supportsMatchMedia
+        ? window.matchMedia("(prefers-color-scheme: dark)")
+        : null;
+      const rootElement = document.documentElement;
+      let currentTheme = rootElement.dataset.appliedTheme || "auto";
 
-        <div class="flex flex-col gap-2">
-          <label for="weight" class="text-sm font-medium text-slate-700">体重 (kg)</label>
-          <input id="weight" type="text" name="weights" placeholder="68" onkeyup="only_num(this)" onblur="only_num(this)" class="rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200">
-        </div>
+      delete rootElement.dataset.appliedTheme;
 
-        <div class="flex flex-col gap-2">
-          <label for="breath" class="text-sm font-medium text-slate-700">肺活量 (毫升)</label>
-          <input id="breath" type="text" name="breaths" placeholder="3500" onkeyup="onlyNumber(this)" onblur="onlyNumber(this)" class="rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200">
-        </div>
+      function applyThemePreference(theme) {
+        if (theme === "dark") {
+          rootElement.setAttribute("data-theme", "dark");
+          rootElement.style.colorScheme = "dark";
+          currentTheme = "dark";
+          return currentTheme;
+        }
 
-        <div class="flex flex-col gap-2">
-          <label for="shortrun" class="text-sm font-medium text-slate-700">50 米跑 (秒)</label>
-          <input id="shortrun" type="text" name="shortruns" placeholder="7.2" onkeyup="only_num(this)" onblur="only_num(this)" class="rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200">
-        </div>
+        if (theme === "light") {
+          rootElement.setAttribute("data-theme", "light");
+          rootElement.style.colorScheme = "light";
+          currentTheme = "light";
+          return currentTheme;
+        }
 
-        <div class="flex flex-col gap-2">
-          <label for="reach" class="text-sm font-medium text-slate-700">坐位体前屈 (cm)</label>
-          <input id="reach" type="text" name="reachs" placeholder="15.0" onkeyup="only_num(this)" onblur="only_num(this)" class="rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200">
-        </div>
-
-        <div class="flex flex-col gap-2">
-          <label for="jump" class="text-sm font-medium text-slate-700">立定跳远 (cm)</label>
-          <input id="jump" type="text" name="jumps" placeholder="220" onkeyup="onlyNumber(this)" onblur="onlyNumber(this)" class="rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200">
-        </div>
-
-        <div id="pullup" class="flex flex-col gap-2">
-          <label for="pullupInput" class="text-sm font-medium text-slate-700">引体向上 (次)</label>
-          <input id="pullupInput" type="text" name="pullups" placeholder="12" onkeyup="onlyNumber(this)" onblur="onlyNumber(this)" class="rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200">
-        </div>
-
-        <div id="situp" class="hidden flex flex-col gap-2">
-          <label for="situpInput" class="text-sm font-medium text-slate-700">1 分钟仰卧起坐 (次)</label>
-          <input id="situpInput" type="text" name="situps" placeholder="40" onkeyup="onlyNumber(this)" onblur="onlyNumber(this)" class="rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200">
-        </div>
-
-        <div id="1000run" class="flex flex-col gap-2">
-          <label for="run1000Input" class="text-sm font-medium text-slate-700">1000 米跑 (分.秒)</label>
-          <input id="run1000Input" type="text" name="1000runs" placeholder="3.45" onkeyup="only_num(this)" onblur="only_num(this)" class="rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200">
-        </div>
-
-        <div id="800run" class="hidden flex flex-col gap-2">
-          <label for="run800Input" class="text-sm font-medium text-slate-700">800 米跑 (分.秒)</label>
-          <input id="run800Input" type="text" name="800runs" placeholder="3.30" onkeyup="only_num(this)" onblur="only_num(this)" class="rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200">
-        </div>
-
-        <input type="hidden" name="BMIs">
-      </div>
-      <div class="mt-6 flex flex-wrap items-center justify-between gap-3">
-        <button id="compute" type="button" onclick="calculate()" class="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-2">计算成绩</button>
-        <div class="text-sm text-slate-600">提示： <code>3.45</code> 表示 3 分 45 秒。</div>
-      </div>
-    </section>
-
-    <section class="rounded-xl bg-white p-6 shadow">
-      <h2 class="text-lg font-medium text-slate-800">成绩汇总</h2>
-      <div class="mt-4 overflow-x-auto">
-        <table class="min-w-full table-fixed border border-slate-200 text-left text-sm">
-          <thead class="bg-slate-50 text-slate-700">
-            <tr>
-              <th class="w-1/3 border-b border-slate-200 px-4 py-3 font-medium">单项指标</th>
-              <th class="w-1/5 border-b border-slate-200 px-4 py-3 font-medium">成绩</th>
-              <th class="w-1/5 border-b border-slate-200 px-4 py-3 font-medium">得分</th>
-              <th class="w-1/5 border-b border-slate-200 px-4 py-3 font-medium">等级</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-slate-200 text-slate-700">
-            <tr>
-              <td class="px-4 py-3">BMI (kg/m<sup>2</sup>)</td>
-              <td id="bmi-value" class="px-4 py-3 text-slate-600">-</td>
-              <td id="bmi-score" class="px-4 py-3">-</td>
-              <td id="bmi-level" class="px-4 py-3">-</td>
-            </tr>
-            <tr>
-              <td class="px-4 py-3">肺活量 (毫升)</td>
-              <td id="breath-value" class="px-4 py-3 text-slate-600">-</td>
-              <td id="breath-score" class="px-4 py-3">-</td>
-              <td id="breath-level" class="px-4 py-3">-</td>
-            </tr>
-            <tr>
-              <td class="px-4 py-3">50m 跑</td>
-              <td id="sprint-value" class="px-4 py-3 text-slate-600">-</td>
-              <td id="sprint-score" class="px-4 py-3">-</td>
-              <td id="sprint-level" class="px-4 py-3">-</td>
-            </tr>
-            <tr>
-              <td class="px-4 py-3">坐位体前屈 (cm)</td>
-              <td id="sitreach-value" class="px-4 py-3 text-slate-600">-</td>
-              <td id="sitreach-score" class="px-4 py-3">-</td>
-              <td id="sitreach-level" class="px-4 py-3">-</td>
-            </tr>
-            <tr>
-              <td class="px-4 py-3">立定跳远 (cm)</td>
-              <td id="longjump-value" class="px-4 py-3 text-slate-600">-</td>
-              <td id="longjump-score" class="px-4 py-3">-</td>
-              <td id="longjump-level" class="px-4 py-3">-</td>
-            </tr>
-            <tr>
-              <td class="px-4 py-3">引体向上 / 1min 仰卧起坐</td>
-              <td id="strength-value" class="px-4 py-3 text-slate-600">-</td>
-              <td id="strength-score" class="px-4 py-3">-</td>
-              <td id="strength-level" class="px-4 py-3">-</td>
-            </tr>
-            <tr>
-              <td class="px-4 py-3">1000m / 800m</td>
-              <td id="endurance-value" class="px-4 py-3 text-slate-600">-</td>
-              <td id="endurance-score" class="px-4 py-3">-</td>
-              <td id="endurance-level" class="px-4 py-3">-</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="mt-6 grid gap-3 rounded-lg border border-indigo-100 bg-indigo-50 px-4 py-3 sm:grid-cols-3">
-        <div class="text-sm text-slate-600">附加分：<span id="addition-score" class="font-semibold text-indigo-700">0</span></div>
-        <div class="text-sm text-slate-600">总分：<span id="result" class="text-lg font-semibold text-indigo-700">0.0</span></div>
-        <div class="text-sm text-slate-600">综合等级：<span id="total-level" class="font-semibold text-indigo-700">-</span></div>
-      </div>
-    </section>
-  </main>
-
-  <script>
-    const themeStorageKey = 'theme-preference';
-    const themeToggleButton = document.getElementById('themeToggle');
-    const themeLabels = {
-      auto: '跟随系统',
-      light: '浅色模式',
-      dark: '深色模式',
-    };
-    const themeSequence = ['auto', 'light', 'dark'];
-    const supportsMatchMedia = typeof window.matchMedia === 'function';
-    const darkMediaQuery = supportsMatchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
-    const rootElement = document.documentElement;
-    let currentTheme = rootElement.dataset.appliedTheme || 'auto';
-
-    delete rootElement.dataset.appliedTheme;
-
-    function applyThemePreference(theme) {
-      if (theme === 'dark') {
-        rootElement.setAttribute('data-theme', 'dark');
-        rootElement.style.colorScheme = 'dark';
-        currentTheme = 'dark';
+        rootElement.removeAttribute("data-theme");
+        const prefersDark = darkMediaQuery ? darkMediaQuery.matches : false;
+        rootElement.style.colorScheme = prefersDark ? "dark" : "light";
+        currentTheme = "auto";
         return currentTheme;
       }
 
-      if (theme === 'light') {
-        rootElement.setAttribute('data-theme', 'light');
-        rootElement.style.colorScheme = 'light';
-        currentTheme = 'light';
-        return currentTheme;
-      }
-
-      rootElement.removeAttribute('data-theme');
-      const prefersDark = darkMediaQuery ? darkMediaQuery.matches : false;
-      rootElement.style.colorScheme = prefersDark ? 'dark' : 'light';
-      currentTheme = 'auto';
-      return currentTheme;
-    }
-
-    function updateThemeToggleLabel(theme) {
-      if (!themeToggleButton) {
-        return;
-      }
-
-      const label = themeLabels[theme] || themeLabels.auto;
-      themeToggleButton.textContent = label;
-      themeToggleButton.setAttribute('data-theme-state', theme);
-      themeToggleButton.setAttribute('aria-label', `切换主题，当前${label}`);
-      themeToggleButton.setAttribute('title', `点击切换主题（${label}）`);
-    }
-
-    function persistTheme(theme) {
-      try {
-        if (theme === 'auto') {
-          localStorage.removeItem(themeStorageKey);
-        } else {
-          localStorage.setItem(themeStorageKey, theme);
-        }
-      } catch (error) {
-        // 无法访问存储时静默失败
-      }
-    }
-
-    function handleSystemThemeChange() {
-      if (currentTheme === 'auto') {
-        const appliedTheme = applyThemePreference('auto');
-        updateThemeToggleLabel(appliedTheme);
-      }
-    }
-
-    currentTheme = applyThemePreference(currentTheme);
-    updateThemeToggleLabel(currentTheme);
-
-    if (themeToggleButton) {
-      themeToggleButton.addEventListener('click', () => {
-        const currentIndex = themeSequence.indexOf(currentTheme);
-        const nextTheme = themeSequence[(currentIndex + 1 + themeSequence.length) % themeSequence.length];
-        const appliedTheme = applyThemePreference(nextTheme);
-        persistTheme(appliedTheme);
-        updateThemeToggleLabel(appliedTheme);
-      });
-    }
-
-    if (darkMediaQuery) {
-      if (typeof darkMediaQuery.addEventListener === 'function') {
-        darkMediaQuery.addEventListener('change', handleSystemThemeChange);
-      } else if (typeof darkMediaQuery.addListener === 'function') {
-        darkMediaQuery.addListener(handleSystemThemeChange);
-      }
-    }
-
-    let sex = 1;
-    const result = document.getElementById('result');
-    const additionEl = document.getElementById('addition-score');
-    const totalLevelEl = document.getElementById('total-level');
-
-    const rowMap = {
-      bmi: {
-        value: document.getElementById('bmi-value'),
-        score: document.getElementById('bmi-score'),
-        level: document.getElementById('bmi-level'),
-      },
-      breath: {
-        value: document.getElementById('breath-value'),
-        score: document.getElementById('breath-score'),
-        level: document.getElementById('breath-level'),
-      },
-      sprint: {
-        value: document.getElementById('sprint-value'),
-        score: document.getElementById('sprint-score'),
-        level: document.getElementById('sprint-level'),
-      },
-      sitreach: {
-        value: document.getElementById('sitreach-value'),
-        score: document.getElementById('sitreach-score'),
-        level: document.getElementById('sitreach-level'),
-      },
-      longjump: {
-        value: document.getElementById('longjump-value'),
-        score: document.getElementById('longjump-score'),
-        level: document.getElementById('longjump-level'),
-      },
-      strength: {
-        value: document.getElementById('strength-value'),
-        score: document.getElementById('strength-score'),
-        level: document.getElementById('strength-level'),
-      },
-      endurance: {
-        value: document.getElementById('endurance-value'),
-        score: document.getElementById('endurance-score'),
-        level: document.getElementById('endurance-level'),
-      },
-    };
-
-    const STORAGE_KEY = 'tailwind-assessment-form-data';
-    const persistableNames = [
-      'sex',
-      'grades',
-      'heights',
-      'weights',
-      'breaths',
-      'shortruns',
-      'reachs',
-      'jumps',
-      'pullups',
-      'situps',
-      '1000runs',
-      '800runs',
-    ];
-
-    const storageAvailable = (() => {
-      try {
-        const testKey = '__pe_converter_storage_test__';
-        localStorage.setItem(testKey, 'ok');
-        localStorage.removeItem(testKey);
-        return true;
-      } catch (err) {
-        console.warn('本地存储不可用，输入内容将不会被自动保存。', err);
-        return false;
-      }
-    })();
-
-    const readFieldValue = (name) => {
-      const nodes = Array.from(document.getElementsByName(name));
-      if (!nodes.length) return '';
-      const first = nodes[0];
-      if (first.type === 'radio') {
-        const checked = nodes.find((node) => node.checked);
-        return checked ? checked.value : '';
-      }
-      return first.value ?? '';
-    };
-
-    const writeFieldValue = (name, value) => {
-      const nodes = Array.from(document.getElementsByName(name));
-      if (!nodes.length) return;
-      const first = nodes[0];
-      if (first.type === 'radio') {
-        nodes.forEach((node) => {
-          node.checked = value !== '' && node.value === value;
-        });
-      } else {
-        nodes.forEach((node) => {
-          node.value = value ?? '';
-        });
-      }
-    };
-
-    const saveFormData = () => {
-      if (!storageAvailable) return;
-      try {
-        const payload = {};
-        persistableNames.forEach((name) => {
-          payload[name] = readFieldValue(name);
-        });
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
-      } catch (err) {
-        console.error('保存表单数据失败', err);
-      }
-    };
-
-    const restoreFormData = () => {
-      if (!storageAvailable) return;
-      try {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        if (!raw) return;
-        const data = JSON.parse(raw);
-        if (!data || typeof data !== 'object') return;
-
-        if (Object.prototype.hasOwnProperty.call(data, 'sex') && data.sex) {
-          writeFieldValue('sex', data.sex);
-        }
-        if (Object.prototype.hasOwnProperty.call(data, 'grades') && data.grades) {
-          writeFieldValue('grades', data.grades);
+      function updateThemeToggleLabel(theme) {
+        if (!themeToggleButton) {
+          return;
         }
 
-        change({ skipSave: true });
+        const label = themeLabels[theme] || themeLabels.auto;
+        themeToggleButton.textContent = label;
+        themeToggleButton.setAttribute("data-theme-state", theme);
+        themeToggleButton.setAttribute("aria-label", `切换主题，当前${label}`);
+        themeToggleButton.setAttribute("title", `点击切换主题（${label}）`);
+      }
 
-        persistableNames.forEach((name) => {
-          if (name === 'sex' || name === 'grades') return;
-          if (Object.prototype.hasOwnProperty.call(data, name)) {
-            writeFieldValue(name, data[name]);
+      function persistTheme(theme) {
+        try {
+          if (theme === "auto") {
+            localStorage.removeItem(themeStorageKey);
+          } else {
+            localStorage.setItem(themeStorageKey, theme);
           }
-        });
-        saveFormData();
-      } catch (err) {
-        console.error('恢复表单数据失败', err);
+        } catch (error) {
+          // 无法访问存储时静默失败
+        }
       }
-    };
 
-    const setupPersistence = () => {
-      if (!storageAvailable) return;
-      restoreFormData();
-      persistableNames.forEach((name) => {
+      function handleSystemThemeChange() {
+        if (currentTheme === "auto") {
+          const appliedTheme = applyThemePreference("auto");
+          updateThemeToggleLabel(appliedTheme);
+        }
+      }
+
+      currentTheme = applyThemePreference(currentTheme);
+      updateThemeToggleLabel(currentTheme);
+
+      if (themeToggleButton) {
+        themeToggleButton.addEventListener("click", () => {
+          const currentIndex = themeSequence.indexOf(currentTheme);
+          const nextTheme =
+            themeSequence[
+              (currentIndex + 1 + themeSequence.length) % themeSequence.length
+            ];
+          const appliedTheme = applyThemePreference(nextTheme);
+          persistTheme(appliedTheme);
+          updateThemeToggleLabel(appliedTheme);
+        });
+      }
+
+      if (darkMediaQuery) {
+        if (typeof darkMediaQuery.addEventListener === "function") {
+          darkMediaQuery.addEventListener("change", handleSystemThemeChange);
+        } else if (typeof darkMediaQuery.addListener === "function") {
+          darkMediaQuery.addListener(handleSystemThemeChange);
+        }
+      }
+
+      let sex = 1;
+      const result = document.getElementById("result");
+      const additionEl = document.getElementById("addition-score");
+      const totalLevelEl = document.getElementById("total-level");
+
+      const rowMap = {
+        bmi: {
+          value: document.getElementById("bmi-value"),
+          score: document.getElementById("bmi-score"),
+          level: document.getElementById("bmi-level"),
+        },
+        breath: {
+          value: document.getElementById("breath-value"),
+          score: document.getElementById("breath-score"),
+          level: document.getElementById("breath-level"),
+        },
+        sprint: {
+          value: document.getElementById("sprint-value"),
+          score: document.getElementById("sprint-score"),
+          level: document.getElementById("sprint-level"),
+        },
+        sitreach: {
+          value: document.getElementById("sitreach-value"),
+          score: document.getElementById("sitreach-score"),
+          level: document.getElementById("sitreach-level"),
+        },
+        longjump: {
+          value: document.getElementById("longjump-value"),
+          score: document.getElementById("longjump-score"),
+          level: document.getElementById("longjump-level"),
+        },
+        strength: {
+          value: document.getElementById("strength-value"),
+          score: document.getElementById("strength-score"),
+          level: document.getElementById("strength-level"),
+        },
+        endurance: {
+          value: document.getElementById("endurance-value"),
+          score: document.getElementById("endurance-score"),
+          level: document.getElementById("endurance-level"),
+        },
+      };
+
+      const STORAGE_KEY = "tailwind-assessment-form-data";
+      const persistableNames = [
+        "sex",
+        "grades",
+        "heights",
+        "weights",
+        "breaths",
+        "shortruns",
+        "reachs",
+        "jumps",
+        "pullups",
+        "situps",
+        "1000runs",
+        "800runs",
+      ];
+
+      const storageAvailable = (() => {
+        try {
+          const testKey = "__pe_converter_storage_test__";
+          localStorage.setItem(testKey, "ok");
+          localStorage.removeItem(testKey);
+          return true;
+        } catch (err) {
+          console.warn("本地存储不可用，输入内容将不会被自动保存。", err);
+          return false;
+        }
+      })();
+
+      const readFieldValue = (name) => {
         const nodes = Array.from(document.getElementsByName(name));
-        nodes.forEach((node) => {
-          const eventName = node.type === 'radio' ? 'change' : 'input';
-          node.addEventListener(eventName, saveFormData);
+        if (!nodes.length) return "";
+        const first = nodes[0];
+        if (first.type === "radio") {
+          const checked = nodes.find((node) => node.checked);
+          return checked ? checked.value : "";
+        }
+        return first.value ?? "";
+      };
+
+      const writeFieldValue = (name, value) => {
+        const nodes = Array.from(document.getElementsByName(name));
+        if (!nodes.length) return;
+        const first = nodes[0];
+        if (first.type === "radio") {
+          nodes.forEach((node) => {
+            node.checked = value !== "" && node.value === value;
+          });
+        } else {
+          nodes.forEach((node) => {
+            node.value = value ?? "";
+          });
+        }
+      };
+
+      const saveFormData = () => {
+        if (!storageAvailable) return;
+        try {
+          const payload = {};
+          persistableNames.forEach((name) => {
+            payload[name] = readFieldValue(name);
+          });
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+        } catch (err) {
+          console.error("保存表单数据失败", err);
+        }
+      };
+
+      const restoreFormData = () => {
+        if (!storageAvailable) return;
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (!raw) return;
+          const data = JSON.parse(raw);
+          if (!data || typeof data !== "object") return;
+
+          if (Object.prototype.hasOwnProperty.call(data, "sex") && data.sex) {
+            writeFieldValue("sex", data.sex);
+          }
+          if (
+            Object.prototype.hasOwnProperty.call(data, "grades") &&
+            data.grades
+          ) {
+            writeFieldValue("grades", data.grades);
+          }
+
+          change({ skipSave: true });
+
+          persistableNames.forEach((name) => {
+            if (name === "sex" || name === "grades") return;
+            if (Object.prototype.hasOwnProperty.call(data, name)) {
+              writeFieldValue(name, data[name]);
+            }
+          });
+          saveFormData();
+        } catch (err) {
+          console.error("恢复表单数据失败", err);
+        }
+      };
+
+      const setupPersistence = () => {
+        if (!storageAvailable) return;
+        restoreFormData();
+        persistableNames.forEach((name) => {
+          const nodes = Array.from(document.getElementsByName(name));
+          nodes.forEach((node) => {
+            const eventName = node.type === "radio" ? "change" : "input";
+            node.addEventListener(eventName, saveFormData);
+          });
         });
-      });
-      const computeButton = document.getElementById('compute');
-      if (computeButton) {
-        computeButton.addEventListener('click', saveFormData);
+        const computeButton = document.getElementById("compute");
+        if (computeButton) {
+          computeButton.addEventListener("click", saveFormData);
+        }
+      };
+
+      const scoreToLevel = (score) => {
+        if (!Number.isFinite(score)) return "-";
+        if (score >= 90) return "优秀";
+        if (score >= 80) return "良好";
+        if (score >= 60) return "及格";
+        return "不及格";
+      };
+
+      const setRow = (key, raw, score, hasValue) => {
+        const target = rowMap[key];
+        if (!target) return;
+        if (!hasValue) {
+          target.value.textContent = "-";
+          target.score.textContent = "-";
+          target.level.textContent = "-";
+          return;
+        }
+        target.value.textContent = raw;
+        target.score.textContent = Number.isFinite(score)
+          ? score.toString()
+          : "-";
+        target.level.textContent = Number.isFinite(score)
+          ? scoreToLevel(score)
+          : "-";
+      };
+
+      function only_num(obj) {
+        var num = obj.value.charAt(0);
+        obj.value = obj.value.replace(/[^\d\.]/g, "");
+        obj.value = obj.value.replace(/\.{2,}/g, ".");
+        obj.value = obj.value
+          .replace(".", "$#$")
+          .replace(/\./g, "")
+          .replace("$#$", ".");
+        if (num === "-") {
+          obj.value = "-" + obj.value;
+        } else if (num === ".") {
+          obj.value = "0" + obj.value;
+        }
       }
-    };
 
-    const scoreToLevel = (score) => {
-      if (!Number.isFinite(score)) return '-';
-      if (score >= 90) return '优秀';
-      if (score >= 80) return '良好';
-      if (score >= 60) return '及格';
-      return '不及格';
-    };
-
-    const setRow = (key, raw, score, hasValue) => {
-      const target = rowMap[key];
-      if (!target) return;
-      if (!hasValue) {
-        target.value.textContent = '-';
-        target.score.textContent = '-';
-        target.level.textContent = '-';
-        return;
-      }
-      target.value.textContent = raw;
-      target.score.textContent = Number.isFinite(score) ? score.toString() : '-';
-      target.level.textContent = Number.isFinite(score) ? scoreToLevel(score) : '-';
-    };
-
-    function only_num(obj){
-      var num = obj.value.charAt(0);
-      obj.value = obj.value.replace(/[^\d\.]/g, '');
-      obj.value = obj.value.replace(/\.{2,}/g, '.');
-      obj.value = obj.value.replace('.', '$#$').replace(/\./g, '').replace('$#$', '.');
-      if (num === '-') {
-        obj.value = '-' + obj.value;
-      } else if (num === '.') {
-        obj.value = '0' + obj.value;
-      }
-    }
-
-    function onlyNumber(obj){
+      function onlyNumber(obj) {
         var t = obj.value.charAt(0);
-        if(t==0){
-            obj.value ='';
+        if (t == 0) {
+          obj.value = "";
         }
-        obj.value = obj.value.replace(/[^\d]/g,'');
-    }
-
-    const change = (options = {}) => {
-      let gender = document.getElementsByName('sex')[0];
-      let run1000 = document.getElementById('1000run');
-      let run800 = document.getElementById('800run');
-      let pullup = document.getElementById('pullup');
-      let situp = document.getElementById('situp');
-      let run1000Value = document.getElementsByName('1000runs')[0];
-      let run800Value = document.getElementsByName('800runs')[0];
-      let pullupValue = document.getElementsByName('pullups')[0];
-      let situpValue = document.getElementsByName('situps')[0];
-      if(!gender.checked){
-        sex = 0;
-        run1000.classList.add('hidden');
-        pullup.classList.add('hidden');
-        run800.classList.remove('hidden');
-        situp.classList.remove('hidden');
-        run800Value.value = '';
-        situpValue.value = '';
-      }else{
-        sex = 1;
-        run1000.classList.remove('hidden');
-        pullup.classList.remove('hidden');
-        run800.classList.add('hidden');
-        situp.classList.add('hidden');
-        run1000Value.value = '';
-        pullupValue.value = '';
+        obj.value = obj.value.replace(/[^\d]/g, "");
       }
-      setRow('strength', '', 0, false);
-      setRow('endurance', '', 0, false);
-      if (!options.skipSave) {
-        saveFormData();
-      }
-    };
 
-    const calculate = () => {
-      var score = 0;
-      var BMIScore = 0;
-      var breathScore = 0;
-      var reachScore = 0;
-      var jumpScore = 0;
-      var shortrunScore = 0;
-      var longrunScore = 0;
-      var pullupsitupScore = 0;
-      var additionScore = 0;
+      const change = (options = {}) => {
+        let gender = document.getElementsByName("sex")[0];
+        let run1000 = document.getElementById("1000run");
+        let run800 = document.getElementById("800run");
+        let pullup = document.getElementById("pullup");
+        let situp = document.getElementById("situp");
+        let run1000Value = document.getElementsByName("1000runs")[0];
+        let run800Value = document.getElementsByName("800runs")[0];
+        let pullupValue = document.getElementsByName("pullups")[0];
+        let situpValue = document.getElementsByName("situps")[0];
+        if (!gender.checked) {
+          sex = 0;
+          run1000.classList.add("hidden");
+          pullup.classList.add("hidden");
+          run800.classList.remove("hidden");
+          situp.classList.remove("hidden");
+          run800Value.value = "";
+          situpValue.value = "";
+        } else {
+          sex = 1;
+          run1000.classList.remove("hidden");
+          pullup.classList.remove("hidden");
+          run800.classList.add("hidden");
+          situp.classList.add("hidden");
+          run1000Value.value = "";
+          pullupValue.value = "";
+        }
+        setRow("strength", "", 0, false);
+        setRow("endurance", "", 0, false);
+        if (!options.skipSave) {
+          saveFormData();
+        }
+      };
 
-      var grades1 = document.getElementsByName('grades')[0];
-      var grade = grades1.checked?1:0;
+      const calculate = () => {
+        var score = 0;
+        var BMIScore = 0;
+        var breathScore = 0;
+        var reachScore = 0;
+        var jumpScore = 0;
+        var shortrunScore = 0;
+        var longrunScore = 0;
+        var pullupsitupScore = 0;
+        var additionScore = 0;
 
-      var height = document.getElementsByName('heights')[0].value;
-      var weight = document.getElementsByName('weights')[0].value;
-      var BMI = document.getElementsByName('BMIs')[0];
-      if(height && weight){
-        var heightNum = parseFloat(height);
-        var weightNum = parseFloat(weight);
-        if(heightNum>=0.1&&heightNum<=3&&weightNum>=5&&weightNum<=500){
-          var newBMI = (weightNum/(heightNum*heightNum)).toFixed(2);
-          BMI.value = newBMI;
-          if(sex == 1){
-            if(newBMI>=17.9&&newBMI<=23.9){
-              BMIScore = 100;
-            }else if(newBMI<=17.8 || (newBMI>=24&&newBMI<=27.9)){
-              BMIScore = 80;
-            }else if(newBMI>=28){
-              BMIScore = 60;
+        var grades1 = document.getElementsByName("grades")[0];
+        var grade = grades1.checked ? 1 : 0;
+
+        var height = document.getElementsByName("heights")[0].value;
+        var weight = document.getElementsByName("weights")[0].value;
+        var BMI = document.getElementsByName("BMIs")[0];
+        if (height && weight) {
+          var heightNum = parseFloat(height);
+          var weightNum = parseFloat(weight);
+          if (
+            heightNum >= 0.1 &&
+            heightNum <= 3 &&
+            weightNum >= 5 &&
+            weightNum <= 500
+          ) {
+            var newBMI = (weightNum / (heightNum * heightNum)).toFixed(2);
+            BMI.value = newBMI;
+            if (sex == 1) {
+              if (newBMI >= 17.9 && newBMI <= 23.9) {
+                BMIScore = 100;
+              } else if (newBMI <= 17.8 || (newBMI >= 24 && newBMI <= 27.9)) {
+                BMIScore = 80;
+              } else if (newBMI >= 28) {
+                BMIScore = 60;
+              }
+            } else {
+              if (newBMI >= 17.2 && newBMI <= 23.9) {
+                BMIScore = 100;
+              } else if (newBMI <= 17.1 || (newBMI >= 24 && newBMI <= 27.9)) {
+                BMIScore = 80;
+              } else if (newBMI >= 28) {
+                BMIScore = 60;
+              }
             }
-          }else{
-            if(newBMI>=17.2&&newBMI<=23.9){
-              BMIScore = 100;
-            }else if(newBMI<=17.1 || (newBMI>=24&&newBMI<=27.9)){
-              BMIScore = 80;
-            }else if(newBMI>=28){
-              BMIScore = 60;
+          } else if (heightNum < 1 || heightNum > 3) {
+            alert("请输入介于1~3的身高数值");
+            BMI.value = "";
+          } else if (weightNum < 5 || weightNum > 500) {
+            alert("请输入介于5~500的体重数值");
+            BMI.value = "";
+          }
+        } else {
+          BMI.value = "";
+        }
+
+        var breath = document.getElementsByName("breaths")[0].value;
+        if (breath != "") {
+          var breathNum = parseFloat(breath);
+          if (breathNum < 1000 || breathNum > 10000) {
+            alert("请输入介于1000~10000的肺活量数值");
+          } else if (sex == 1 && grade == 1) {
+            if (breathNum >= 5040) {
+              breathScore = 100;
+            } else if (breathNum >= 4920) {
+              breathScore = 95;
+            } else if (breathNum >= 4800) {
+              breathScore = 90;
+            } else if (breathNum >= 4500) {
+              breathScore = 85;
+            } else if (breathNum >= 4300) {
+              breathScore = 80;
+            } else if (breathNum >= 4180) {
+              breathScore = 78;
+            } else if (breathNum >= 4060) {
+              breathScore = 76;
+            } else if (breathNum >= 3940) {
+              breathScore = 74;
+            } else if (breathNum >= 3820) {
+              breathScore = 72;
+            } else if (breathNum >= 3700) {
+              breathScore = 70;
+            } else if (breathNum >= 3580) {
+              breathScore = 68;
+            } else if (breathNum >= 3460) {
+              breathScore = 66;
+            } else if (breathNum >= 3340) {
+              breathScore = 64;
+            } else if (breathNum >= 3220) {
+              breathScore = 62;
+            } else if (breathNum >= 3100) {
+              breathScore = 60;
+            } else if (breathNum >= 2940) {
+              breathScore = 50;
+            } else if (breathNum >= 2780) {
+              breathScore = 40;
+            } else if (breathNum >= 2620) {
+              breathScore = 30;
+            } else if (breathNum >= 2460) {
+              breathScore = 20;
+            } else if (breathNum >= 2300) {
+              breathScore = 10;
+            }
+          } else if (sex == 1 && grade == 0) {
+            if (breathNum >= 5140) {
+              breathScore = 100;
+            } else if (breathNum >= 5020) {
+              breathScore = 95;
+            } else if (breathNum >= 4900) {
+              breathScore = 90;
+            } else if (breathNum >= 4600) {
+              breathScore = 85;
+            } else if (breathNum >= 4400) {
+              breathScore = 80;
+            } else if (breathNum >= 4280) {
+              breathScore = 78;
+            } else if (breathNum >= 4160) {
+              breathScore = 76;
+            } else if (breathNum >= 4040) {
+              breathScore = 74;
+            } else if (breathNum >= 3920) {
+              breathScore = 72;
+            } else if (breathNum >= 3800) {
+              breathScore = 70;
+            } else if (breathNum >= 3680) {
+              breathScore = 68;
+            } else if (breathNum >= 3560) {
+              breathScore = 66;
+            } else if (breathNum >= 3440) {
+              breathScore = 64;
+            } else if (breathNum >= 3320) {
+              breathScore = 62;
+            } else if (breathNum >= 3200) {
+              breathScore = 60;
+            } else if (breathNum >= 3030) {
+              breathScore = 50;
+            } else if (breathNum >= 2860) {
+              breathScore = 40;
+            } else if (breathNum >= 2690) {
+              breathScore = 30;
+            } else if (breathNum >= 2520) {
+              breathScore = 20;
+            } else if (breathNum >= 2350) {
+              breathScore = 10;
+            }
+          } else if (sex == 0 && grade == 1) {
+            if (breathNum >= 3400) {
+              breathScore = 100;
+            } else if (breathNum >= 3350) {
+              breathScore = 95;
+            } else if (breathNum >= 3300) {
+              breathScore = 90;
+            } else if (breathNum >= 3150) {
+              breathScore = 85;
+            } else if (breathNum >= 3000) {
+              breathScore = 80;
+            } else if (breathNum >= 2900) {
+              breathScore = 78;
+            } else if (breathNum >= 2800) {
+              breathScore = 76;
+            } else if (breathNum >= 2700) {
+              breathScore = 74;
+            } else if (breathNum >= 2600) {
+              breathScore = 72;
+            } else if (breathNum >= 2500) {
+              breathScore = 70;
+            } else if (breathNum >= 2400) {
+              breathScore = 68;
+            } else if (breathNum >= 2300) {
+              breathScore = 66;
+            } else if (breathNum >= 2200) {
+              breathScore = 64;
+            } else if (breathNum >= 2100) {
+              breathScore = 62;
+            } else if (breathNum >= 2000) {
+              breathScore = 60;
+            } else if (breathNum >= 1960) {
+              breathScore = 50;
+            } else if (breathNum >= 1920) {
+              breathScore = 40;
+            } else if (breathNum >= 1880) {
+              breathScore = 30;
+            } else if (breathNum >= 1840) {
+              breathScore = 20;
+            } else if (breathNum >= 1800) {
+              breathScore = 10;
+            }
+          } else if (sex == 0 && grade == 0) {
+            if (breathNum >= 3450) {
+              breathScore = 100;
+            } else if (breathNum >= 3400) {
+              breathScore = 95;
+            } else if (breathNum >= 3350) {
+              breathScore = 90;
+            } else if (breathNum >= 3200) {
+              breathScore = 85;
+            } else if (breathNum >= 3050) {
+              breathScore = 80;
+            } else if (breathNum >= 2950) {
+              breathScore = 78;
+            } else if (breathNum >= 2850) {
+              breathScore = 76;
+            } else if (breathNum >= 2750) {
+              breathScore = 74;
+            } else if (breathNum >= 2650) {
+              breathScore = 72;
+            } else if (breathNum >= 2550) {
+              breathScore = 70;
+            } else if (breathNum >= 2450) {
+              breathScore = 68;
+            } else if (breathNum >= 2350) {
+              breathScore = 66;
+            } else if (breathNum >= 2250) {
+              breathScore = 64;
+            } else if (breathNum >= 2150) {
+              breathScore = 62;
+            } else if (breathNum >= 2050) {
+              breathScore = 60;
+            } else if (breathNum >= 2010) {
+              breathScore = 50;
+            } else if (breathNum >= 1970) {
+              breathScore = 40;
+            } else if (breathNum >= 1930) {
+              breathScore = 30;
+            } else if (breathNum >= 1890) {
+              breathScore = 20;
+            } else if (breathNum >= 1850) {
+              breathScore = 10;
             }
           }
-        }else if(heightNum<1 || heightNum>3){
-          alert('请输入介于1~3的身高数值');
-          BMI.value = '';
-        }else if(weightNum<5 || weightNum>500){
-          alert('请输入介于5~500的体重数值');
-          BMI.value = '';
         }
-      }else{
-        BMI.value = '';
-      }
 
-      var breath = document.getElementsByName('breaths')[0].value;
-      if(breath!=''){
-        var breathNum = parseFloat(breath);
-        if(breathNum<1000 || breathNum>10000){
-          alert('请输入介于1000~10000的肺活量数值');
-        }else if(sex == 1 && grade == 1){
-          if(breathNum>=5040){
-            breathScore = 100;
-          }else if(breathNum>=4920){
-            breathScore = 95;
-          }else if(breathNum>=4800){
-            breathScore = 90;
-          }else if(breathNum>=4500){
-            breathScore = 85;
-          }else if(breathNum>=4300){
-            breathScore = 80;
-          }else if(breathNum>=4180){
-            breathScore = 78;
-          }else if(breathNum>=4060){
-            breathScore = 76;
-          }else if(breathNum>=3940){
-            breathScore = 74;
-          }else if(breathNum>=3820){
-            breathScore = 72;
-          }else if(breathNum>=3700){
-            breathScore = 70;
-          }else if(breathNum>=3580){
-            breathScore = 68;
-          }else if(breathNum>=3460){
-            breathScore = 66;
-          }else if(breathNum>=3340){
-            breathScore = 64;
-          }else if(breathNum>=3220){
-            breathScore = 62;
-          }else if(breathNum>=3100){
-            breathScore = 60;
-          }else if(breathNum>=2940){
-            breathScore = 50;
-          }else if(breathNum>=2780){
-            breathScore = 40;
-          }else if(breathNum>=2620){
-            breathScore = 30;
-          }else if(breathNum>=2460){
-            breathScore = 20;
-          }else if(breathNum>=2300){
-            breathScore = 10;
-          }
-        }else if(sex == 1 && grade == 0){
-          if(breathNum>=5140){
-            breathScore = 100;
-          }else if(breathNum>=5020){
-            breathScore = 95;
-          }else if(breathNum>=4900){
-            breathScore = 90;
-          }else if(breathNum>=4600){
-            breathScore = 85;
-          }else if(breathNum>=4400){
-            breathScore = 80;
-          }else if(breathNum>=4280){
-            breathScore = 78;
-          }else if(breathNum>=4160){
-            breathScore = 76;
-          }else if(breathNum>=4040){
-            breathScore = 74;
-          }else if(breathNum>=3920){
-            breathScore = 72;
-          }else if(breathNum>=3800){
-            breathScore = 70;
-          }else if(breathNum>=3680){
-            breathScore = 68;
-          }else if(breathNum>=3560){
-            breathScore = 66;
-          }else if(breathNum>=3440){
-            breathScore = 64;
-          }else if(breathNum>=3320){
-            breathScore = 62;
-          }else if(breathNum>=3200){
-            breathScore = 60;
-          }else if(breathNum>=3030){
-            breathScore = 50;
-          }else if(breathNum>=2860){
-            breathScore = 40;
-          }else if(breathNum>=2690){
-            breathScore = 30;
-          }else if(breathNum>=2520){
-            breathScore = 20;
-          }else if(breathNum>=2350){
-            breathScore = 10;
-          }
-        }else if(sex == 0 && grade == 1){
-          if(breathNum>=3400){
-            breathScore = 100;
-          }else if(breathNum>=3350){
-            breathScore = 95;
-          }else if(breathNum>=3300){
-            breathScore = 90;
-          }else if(breathNum>=3150){
-            breathScore = 85;
-          }else if(breathNum>=3000){
-            breathScore = 80;
-          }else if(breathNum>=2900){
-            breathScore = 78;
-          }else if(breathNum>=2800){
-            breathScore = 76;
-          }else if(breathNum>=2700){
-            breathScore = 74;
-          }else if(breathNum>=2600){
-            breathScore = 72;
-          }else if(breathNum>=2500){
-            breathScore = 70;
-          }else if(breathNum>=2400){
-            breathScore = 68;
-          }else if(breathNum>=2300){
-            breathScore = 66;
-          }else if(breathNum>=2200){
-            breathScore = 64;
-          }else if(breathNum>=2100){
-            breathScore = 62;
-          }else if(breathNum>=2000){
-            breathScore = 60;
-          }else if(breathNum>=1960){
-            breathScore = 50;
-          }else if(breathNum>=1920){
-            breathScore = 40;
-          }else if(breathNum>=1880){
-            breathScore = 30;
-          }else if(breathNum>=1840){
-            breathScore = 20;
-          }else if(breathNum>=1800){
-            breathScore = 10;
-          }
-        }else if(sex == 0 && grade == 0){
-          if(breathNum>=3450){
-            breathScore = 100;
-          }else if(breathNum>=3400){
-            breathScore = 95;
-          }else if(breathNum>=3350){
-            breathScore = 90;
-          }else if(breathNum>=3200){
-            breathScore = 85;
-          }else if(breathNum>=3050){
-            breathScore = 80;
-          }else if(breathNum>=2950){
-            breathScore = 78;
-          }else if(breathNum>=2850){
-            breathScore = 76;
-          }else if(breathNum>=2750){
-            breathScore = 74;
-          }else if(breathNum>=2650){
-            breathScore = 72;
-          }else if(breathNum>=2550){
-            breathScore = 70;
-          }else if(breathNum>=2450){
-            breathScore = 68;
-          }else if(breathNum>=2350){
-            breathScore = 66;
-          }else if(breathNum>=2250){
-            breathScore = 64;
-          }else if(breathNum>=2150){
-            breathScore = 62;
-          }else if(breathNum>=2050){
-            breathScore = 60;
-          }else if(breathNum>=2010){
-            breathScore = 50;
-          }else if(breathNum>=1970){
-            breathScore = 40;
-          }else if(breathNum>=1930){
-            breathScore = 30;
-          }else if(breathNum>=1890){
-            breathScore = 20;
-          }else if(breathNum>=1850){
-            breathScore = 10;
+        var reach = document.getElementsByName("reachs")[0].value;
+        if (reach != "") {
+          var reachNum = parseFloat(reach);
+          if (reachNum < -20 || reachNum > 100) {
+            alert("请输入介于-20~100的体前屈数值");
+          } else if (sex == 1 && grade == 1) {
+            if (reachNum >= 24.9) {
+              reachScore = 100;
+            } else if (reachNum >= 23.1) {
+              reachScore = 95;
+            } else if (reachNum >= 21.3) {
+              reachScore = 90;
+            } else if (reachNum >= 19.5) {
+              reachScore = 85;
+            } else if (reachNum >= 17.7) {
+              reachScore = 80;
+            } else if (reachNum >= 16.3) {
+              reachScore = 78;
+            } else if (reachNum >= 14.9) {
+              reachScore = 76;
+            } else if (reachNum >= 13.5) {
+              reachScore = 74;
+            } else if (reachNum >= 12.1) {
+              reachScore = 72;
+            } else if (reachNum >= 10.7) {
+              reachScore = 70;
+            } else if (reachNum >= 9.3) {
+              reachScore = 68;
+            } else if (reachNum >= 7.9) {
+              reachScore = 66;
+            } else if (reachNum >= 6.5) {
+              reachScore = 64;
+            } else if (reachNum >= 5.1) {
+              reachScore = 62;
+            } else if (reachNum >= 3.7) {
+              reachScore = 60;
+            } else if (reachNum >= 2.7) {
+              reachScore = 50;
+            } else if (reachNum >= 1.7) {
+              reachScore = 40;
+            } else if (reachNum >= 0.7) {
+              reachScore = 30;
+            } else if (reachNum >= -0.3) {
+              reachScore = 20;
+            } else if (reachNum >= -1.3) {
+              reachScore = 10;
+            }
+          } else if (sex == 1 && grade == 0) {
+            if (reachNum >= 25.1) {
+              reachScore = 100;
+            } else if (reachNum >= 23.3) {
+              reachScore = 95;
+            } else if (reachNum >= 21.5) {
+              reachScore = 90;
+            } else if (reachNum >= 19.9) {
+              reachScore = 85;
+            } else if (reachNum >= 18.2) {
+              reachScore = 80;
+            } else if (reachNum >= 16.8) {
+              reachScore = 78;
+            } else if (reachNum >= 15.4) {
+              reachScore = 76;
+            } else if (reachNum >= 14) {
+              reachScore = 74;
+            } else if (reachNum >= 12.6) {
+              reachScore = 72;
+            } else if (reachNum >= 11.2) {
+              reachScore = 70;
+            } else if (reachNum >= 9.8) {
+              reachScore = 68;
+            } else if (reachNum >= 8.4) {
+              reachScore = 66;
+            } else if (reachNum >= 7) {
+              reachScore = 64;
+            } else if (reachNum >= 5.6) {
+              reachScore = 62;
+            } else if (reachNum >= 4.2) {
+              reachScore = 60;
+            } else if (reachNum >= 3.2) {
+              reachScore = 50;
+            } else if (reachNum >= 2.2) {
+              reachScore = 40;
+            } else if (reachNum >= 1.2) {
+              reachScore = 30;
+            } else if (reachNum >= 0.2) {
+              reachScore = 20;
+            } else if (reachNum >= -0.8) {
+              reachScore = 10;
+            }
+          } else if (sex == 0 && grade == 1) {
+            if (reachNum >= 27.1) {
+              reachScore = 100;
+            } else if (reachNum >= 25.3) {
+              reachScore = 95;
+            } else if (reachNum >= 23.5) {
+              reachScore = 90;
+            } else if (reachNum >= 21.7) {
+              reachScore = 85;
+            } else if (reachNum >= 19.9) {
+              reachScore = 80;
+            } else if (reachNum >= 18.5) {
+              reachScore = 78;
+            } else if (reachNum >= 17.1) {
+              reachScore = 76;
+            } else if (reachNum >= 15.7) {
+              reachScore = 74;
+            } else if (reachNum >= 14.3) {
+              reachScore = 72;
+            } else if (reachNum >= 12.9) {
+              reachScore = 70;
+            } else if (reachNum >= 11.5) {
+              reachScore = 68;
+            } else if (reachNum >= 10.1) {
+              reachScore = 66;
+            } else if (reachNum >= 8.7) {
+              reachScore = 64;
+            } else if (reachNum >= 7.3) {
+              reachScore = 62;
+            } else if (reachNum >= 5.9) {
+              reachScore = 60;
+            } else if (reachNum >= 4.9) {
+              reachScore = 50;
+            } else if (reachNum >= 3.9) {
+              reachScore = 40;
+            } else if (reachNum >= 2.9) {
+              reachScore = 30;
+            } else if (reachNum >= 1.9) {
+              reachScore = 20;
+            } else if (reachNum >= 0.9) {
+              reachScore = 10;
+            }
+          } else if (sex == 0 && grade == 0) {
+            if (reachNum >= 27.3) {
+              reachScore = 100;
+            } else if (reachNum >= 25.5) {
+              reachScore = 95;
+            } else if (reachNum >= 23.7) {
+              reachScore = 90;
+            } else if (reachNum >= 21.9) {
+              reachScore = 85;
+            } else if (reachNum >= 20.1) {
+              reachScore = 80;
+            } else if (reachNum >= 18.7) {
+              reachScore = 78;
+            } else if (reachNum >= 17.3) {
+              reachScore = 76;
+            } else if (reachNum >= 15.9) {
+              reachScore = 74;
+            } else if (reachNum >= 14.5) {
+              reachScore = 72;
+            } else if (reachNum >= 13.1) {
+              reachScore = 70;
+            } else if (reachNum >= 11.7) {
+              reachScore = 68;
+            } else if (reachNum >= 10.3) {
+              reachScore = 66;
+            } else if (reachNum >= 8.9) {
+              reachScore = 64;
+            } else if (reachNum >= 7.5) {
+              reachScore = 62;
+            } else if (reachNum >= 6.1) {
+              reachScore = 60;
+            } else if (reachNum >= 5.1) {
+              reachScore = 50;
+            } else if (reachNum >= 4.1) {
+              reachScore = 40;
+            } else if (reachNum >= 3.1) {
+              reachScore = 30;
+            } else if (reachNum >= 2.1) {
+              reachScore = 20;
+            } else if (reachNum >= 1.1) {
+              reachScore = 10;
+            }
           }
         }
-      }
 
-      var reach = document.getElementsByName('reachs')[0].value;
-      if(reach!=''){
-        var reachNum = parseFloat(reach);
-        if(reachNum<-20 || reachNum>100){
-          alert('请输入介于-20~100的体前屈数值');
-        }else if(sex == 1 && grade == 1){
-          if(reachNum>=24.9){
-            reachScore = 100;
-          }else if(reachNum>=23.1){
-            reachScore = 95;
-          }else if(reachNum>=21.3){
-            reachScore = 90;
-          }else if(reachNum>=19.5){
-            reachScore = 85;
-          }else if(reachNum>=17.7){
-            reachScore = 80;
-          }else if(reachNum>=16.3){
-            reachScore = 78;
-          }else if(reachNum>=14.9){
-            reachScore = 76;
-          }else if(reachNum>=13.5){
-            reachScore = 74;
-          }else if(reachNum>=12.1){
-            reachScore = 72;
-          }else if(reachNum>=10.7){
-            reachScore = 70;
-          }else if(reachNum>=9.3){
-            reachScore = 68;
-          }else if(reachNum>=7.9){
-            reachScore = 66;
-          }else if(reachNum>=6.5){
-            reachScore = 64;
-          }else if(reachNum>=5.1){
-            reachScore = 62;
-          }else if(reachNum>=3.7){
-            reachScore = 60;
-          }else if(reachNum>=2.7){
-            reachScore = 50;
-          }else if(reachNum>=1.7){
-            reachScore = 40;
-          }else if(reachNum>=0.7){
-            reachScore = 30;
-          }else if(reachNum>=-0.3){
-            reachScore = 20;
-          }else if(reachNum>=-1.3){
-            reachScore = 10;
-          }
-        }else if(sex == 1 && grade == 0){
-          if(reachNum>=25.1){
-            reachScore = 100;
-          }else if(reachNum>=23.3){
-            reachScore = 95;
-          }else if(reachNum>=21.5){
-            reachScore = 90;
-          }else if(reachNum>=19.9){
-            reachScore = 85;
-          }else if(reachNum>=18.2){
-            reachScore = 80;
-          }else if(reachNum>=16.8){
-            reachScore = 78;
-          }else if(reachNum>=15.4){
-            reachScore = 76;
-          }else if(reachNum>=14){
-            reachScore = 74;
-          }else if(reachNum>=12.6){
-            reachScore = 72;
-          }else if(reachNum>=11.2){
-            reachScore = 70;
-          }else if(reachNum>=9.8){
-            reachScore = 68;
-          }else if(reachNum>=8.4){
-            reachScore = 66;
-          }else if(reachNum>=7){
-            reachScore = 64;
-          }else if(reachNum>=5.6){
-            reachScore = 62;
-          }else if(reachNum>=4.2){
-            reachScore = 60;
-          }else if(reachNum>=3.2){
-            reachScore = 50;
-          }else if(reachNum>=2.2){
-            reachScore = 40;
-          }else if(reachNum>=1.2){
-            reachScore = 30;
-          }else if(reachNum>=0.2){
-            reachScore = 20;
-          }else if(reachNum>=-0.8){
-            reachScore = 10;
-          }
-        }else if(sex == 0 && grade ==1){
-          if(reachNum>=27.1){
-            reachScore = 100;
-          }else if(reachNum>=25.3){
-            reachScore = 95;
-          }else if(reachNum>=23.5){
-            reachScore = 90;
-          }else if(reachNum>=21.7){
-            reachScore = 85;
-          }else if(reachNum>=19.9){
-            reachScore = 80;
-          }else if(reachNum>=18.5){
-            reachScore = 78;
-          }else if(reachNum>=17.1){
-            reachScore = 76;
-          }else if(reachNum>=15.7){
-            reachScore = 74;
-          }else if(reachNum>=14.3){
-            reachScore = 72;
-          }else if(reachNum>=12.9){
-            reachScore = 70;
-          }else if(reachNum>=11.5){
-            reachScore = 68;
-          }else if(reachNum>=10.1){
-            reachScore = 66;
-          }else if(reachNum>=8.7){
-            reachScore = 64;
-          }else if(reachNum>=7.3){
-            reachScore = 62;
-          }else if(reachNum>=5.9){
-            reachScore = 60;
-          }else if(reachNum>=4.9){
-            reachScore = 50;
-          }else if(reachNum>=3.9){
-            reachScore = 40;
-          }else if(reachNum>=2.9){
-            reachScore = 30;
-          }else if(reachNum>=1.9){
-            reachScore = 20;
-          }else if(reachNum>=0.9){
-            reachScore = 10;
-          }
-        }else if(sex == 0 && grade ==0){
-          if(reachNum>=27.3){
-            reachScore = 100;
-          }else if(reachNum>=25.5){
-            reachScore = 95;
-          }else if(reachNum>=23.7){
-            reachScore = 90;
-          }else if(reachNum>=21.9){
-            reachScore = 85;
-          }else if(reachNum>=20.1){
-            reachScore = 80;
-          }else if(reachNum>=18.7){
-            reachScore = 78;
-          }else if(reachNum>=17.3){
-            reachScore = 76;
-          }else if(reachNum>=15.9){
-            reachScore = 74;
-          }else if(reachNum>=14.5){
-            reachScore = 72;
-          }else if(reachNum>=13.1){
-            reachScore = 70;
-          }else if(reachNum>=11.7){
-            reachScore = 68;
-          }else if(reachNum>=10.3){
-            reachScore = 66;
-          }else if(reachNum>=8.9){
-            reachScore = 64;
-          }else if(reachNum>=7.5){
-            reachScore = 62;
-          }else if(reachNum>=6.1){
-            reachScore = 60;
-          }else if(reachNum>=5.1){
-            reachScore = 50;
-          }else if(reachNum>=4.1){
-            reachScore = 40;
-          }else if(reachNum>=3.1){
-            reachScore = 30;
-          }else if(reachNum>=2.1){
-            reachScore = 20;
-          }else if(reachNum>=1.1){
-            reachScore = 10;
+        var jump = document.getElementsByName("jumps")[0].value;
+        if (jump != "") {
+          var jumpNum = parseFloat(jump);
+          if (jumpNum < 50 || jumpNum > 400) {
+            alert("请输入介于50~400的立定跳远数值");
+          } else if (sex == 1 && grade == 1) {
+            if (jumpNum >= 272) {
+              jumpScore = 100;
+            } else if (jumpNum >= 267) {
+              jumpScore = 95;
+            } else if (jumpNum >= 262) {
+              jumpScore = 90;
+            } else if (jumpNum >= 255) {
+              jumpScore = 85;
+            } else if (jumpNum >= 247) {
+              jumpScore = 80;
+            } else if (jumpNum >= 243) {
+              jumpScore = 78;
+            } else if (jumpNum >= 239) {
+              jumpScore = 76;
+            } else if (jumpNum >= 235) {
+              jumpScore = 74;
+            } else if (jumpNum >= 231) {
+              jumpScore = 72;
+            } else if (jumpNum >= 227) {
+              jumpScore = 70;
+            } else if (jumpNum >= 223) {
+              jumpScore = 68;
+            } else if (jumpNum >= 219) {
+              jumpScore = 66;
+            } else if (jumpNum >= 215) {
+              jumpScore = 64;
+            } else if (jumpNum >= 211) {
+              jumpScore = 62;
+            } else if (jumpNum >= 207) {
+              jumpScore = 60;
+            } else if (jumpNum >= 203) {
+              jumpScore = 50;
+            } else if (jumpNum >= 198) {
+              jumpScore = 40;
+            } else if (jumpNum >= 193) {
+              jumpScore = 30;
+            } else if (jumpNum >= 188) {
+              jumpScore = 20;
+            } else if (jumpNum >= 183) {
+              jumpScore = 10;
+            }
+          } else if (sex == 1 && grade == 0) {
+            if (jumpNum >= 275) {
+              jumpScore = 100;
+            } else if (jumpNum >= 270) {
+              jumpScore = 95;
+            } else if (jumpNum >= 265) {
+              jumpScore = 90;
+            } else if (jumpNum >= 258) {
+              jumpScore = 85;
+            } else if (jumpNum >= 250) {
+              jumpScore = 80;
+            } else if (jumpNum >= 246) {
+              jumpScore = 78;
+            } else if (jumpNum >= 242) {
+              jumpScore = 76;
+            } else if (jumpNum >= 238) {
+              jumpScore = 74;
+            } else if (jumpNum >= 234) {
+              jumpScore = 72;
+            } else if (jumpNum >= 230) {
+              jumpScore = 70;
+            } else if (jumpNum >= 226) {
+              jumpScore = 68;
+            } else if (jumpNum >= 222) {
+              jumpScore = 66;
+            } else if (jumpNum >= 218) {
+              jumpScore = 64;
+            } else if (jumpNum >= 214) {
+              jumpScore = 62;
+            } else if (jumpNum >= 210) {
+              jumpScore = 60;
+            } else if (jumpNum >= 205) {
+              jumpScore = 50;
+            } else if (jumpNum >= 200) {
+              jumpScore = 40;
+            } else if (jumpNum >= 195) {
+              jumpScore = 30;
+            } else if (jumpNum >= 190) {
+              jumpScore = 20;
+            } else if (jumpNum >= 185) {
+              jumpScore = 10;
+            }
+          } else if (sex == 0 && grade == 1) {
+            if (jumpNum >= 207) {
+              jumpScore = 100;
+            } else if (jumpNum >= 201) {
+              jumpScore = 95;
+            } else if (jumpNum >= 195) {
+              jumpScore = 90;
+            } else if (jumpNum >= 188) {
+              jumpScore = 85;
+            } else if (jumpNum >= 181) {
+              jumpScore = 80;
+            } else if (jumpNum >= 178) {
+              jumpScore = 78;
+            } else if (jumpNum >= 175) {
+              jumpScore = 76;
+            } else if (jumpNum >= 172) {
+              jumpScore = 74;
+            } else if (jumpNum >= 169) {
+              jumpScore = 72;
+            } else if (jumpNum >= 166) {
+              jumpScore = 70;
+            } else if (jumpNum >= 163) {
+              jumpScore = 68;
+            } else if (jumpNum >= 160) {
+              jumpScore = 66;
+            } else if (jumpNum >= 157) {
+              jumpScore = 64;
+            } else if (jumpNum >= 154) {
+              jumpScore = 62;
+            } else if (jumpNum >= 151) {
+              jumpScore = 60;
+            } else if (jumpNum >= 146) {
+              jumpScore = 50;
+            } else if (jumpNum >= 141) {
+              jumpScore = 40;
+            } else if (jumpNum >= 136) {
+              jumpScore = 30;
+            } else if (jumpNum >= 131) {
+              jumpScore = 20;
+            } else if (jumpNum >= 126) {
+              jumpScore = 10;
+            }
+          } else if (sex == 0 && grade == 0) {
+            if (jumpNum >= 208) {
+              jumpScore = 100;
+            } else if (jumpNum >= 202) {
+              jumpScore = 95;
+            } else if (jumpNum >= 196) {
+              jumpScore = 90;
+            } else if (jumpNum >= 189) {
+              jumpScore = 85;
+            } else if (jumpNum >= 182) {
+              jumpScore = 80;
+            } else if (jumpNum >= 179) {
+              jumpScore = 78;
+            } else if (jumpNum >= 176) {
+              jumpScore = 76;
+            } else if (jumpNum >= 173) {
+              jumpScore = 74;
+            } else if (jumpNum >= 170) {
+              jumpScore = 72;
+            } else if (jumpNum >= 167) {
+              jumpScore = 70;
+            } else if (jumpNum >= 164) {
+              jumpScore = 68;
+            } else if (jumpNum >= 161) {
+              jumpScore = 66;
+            } else if (jumpNum >= 158) {
+              jumpScore = 64;
+            } else if (jumpNum >= 155) {
+              jumpScore = 62;
+            } else if (jumpNum >= 152) {
+              jumpScore = 60;
+            } else if (jumpNum >= 147) {
+              jumpScore = 50;
+            } else if (jumpNum >= 142) {
+              jumpScore = 40;
+            } else if (jumpNum >= 137) {
+              jumpScore = 30;
+            } else if (jumpNum >= 132) {
+              jumpScore = 20;
+            } else if (jumpNum >= 127) {
+              jumpScore = 10;
+            }
           }
         }
-      }
 
-      var jump = document.getElementsByName('jumps')[0].value;
-      if(jump!=''){
-        var jumpNum = parseFloat(jump);
-        if(jumpNum<50 || jumpNum>400){
-          alert('请输入介于50~400的立定跳远数值');
-        }else if(sex == 1 && grade == 1){
-          if(jumpNum>=272){
-            jumpScore = 100;
-          }else if(jumpNum>=267){
-            jumpScore = 95;
-          }else if(jumpNum>=262){
-            jumpScore = 90;
-          }else if(jumpNum>=255){
-            jumpScore = 85;
-          }else if(jumpNum>=247){
-            jumpScore = 80;
-          }else if(jumpNum>=243){
-            jumpScore = 78;
-          }else if(jumpNum>=239){
-            jumpScore = 76;
-          }else if(jumpNum>=235){
-            jumpScore = 74;
-          }else if(jumpNum>=231){
-            jumpScore = 72;
-          }else if(jumpNum>=227){
-            jumpScore = 70;
-          }else if(jumpNum>=223){
-            jumpScore = 68;
-          }else if(jumpNum>=219){
-            jumpScore = 66;
-          }else if(jumpNum>=215){
-            jumpScore = 64;
-          }else if(jumpNum>=211){
-            jumpScore = 62;
-          }else if(jumpNum>=207){
-            jumpScore = 60;
-          }else if(jumpNum>=203){
-            jumpScore = 50;
-          }else if(jumpNum>=198){
-            jumpScore = 40;
-          }else if(jumpNum>=193){
-            jumpScore = 30;
-          }else if(jumpNum>=188){
-            jumpScore = 20;
-          }else if(jumpNum>=183){
-            jumpScore = 10;
-          }
-        }else if(sex == 1 && grade == 0){
-          if(jumpNum>=275){
-            jumpScore = 100;
-          }else if(jumpNum>=270){
-            jumpScore = 95;
-          }else if(jumpNum>=265){
-            jumpScore = 90;
-          }else if(jumpNum>=258){
-            jumpScore = 85;
-          }else if(jumpNum>=250){
-            jumpScore = 80;
-          }else if(jumpNum>=246){
-            jumpScore = 78;
-          }else if(jumpNum>=242){
-            jumpScore = 76;
-          }else if(jumpNum>=238){
-            jumpScore = 74;
-          }else if(jumpNum>=234){
-            jumpScore = 72;
-          }else if(jumpNum>=230){
-            jumpScore = 70;
-          }else if(jumpNum>=226){
-            jumpScore = 68;
-          }else if(jumpNum>=222){
-            jumpScore = 66;
-          }else if(jumpNum>=218){
-            jumpScore = 64;
-          }else if(jumpNum>=214){
-            jumpScore = 62;
-          }else if(jumpNum>=210){
-            jumpScore = 60;
-          }else if(jumpNum>=205){
-            jumpScore = 50;
-          }else if(jumpNum>=200){
-            jumpScore = 40;
-          }else if(jumpNum>=195){
-            jumpScore = 30;
-          }else if(jumpNum>=190){
-            jumpScore = 20;
-          }else if(jumpNum>=185){
-            jumpScore = 10;
-          }
-        }else if(sex == 0 && grade ==1){
-          if(jumpNum>=207){
-            jumpScore = 100;
-          }else if(jumpNum>=201){
-            jumpScore = 95;
-          }else if(jumpNum>=195){
-            jumpScore = 90;
-          }else if(jumpNum>=188){
-            jumpScore = 85;
-          }else if(jumpNum>=181){
-            jumpScore = 80;
-          }else if(jumpNum>=178){
-            jumpScore = 78;
-          }else if(jumpNum>=175){
-            jumpScore = 76;
-          }else if(jumpNum>=172){
-            jumpScore = 74;
-          }else if(jumpNum>=169){
-            jumpScore = 72;
-          }else if(jumpNum>=166){
-            jumpScore = 70;
-          }else if(jumpNum>=163){
-            jumpScore = 68;
-          }else if(jumpNum>=160){
-            jumpScore = 66;
-          }else if(jumpNum>=157){
-            jumpScore = 64;
-          }else if(jumpNum>=154){
-            jumpScore = 62;
-          }else if(jumpNum>=151){
-            jumpScore = 60;
-          }else if(jumpNum>=146){
-            jumpScore = 50;
-          }else if(jumpNum>=141){
-            jumpScore = 40;
-          }else if(jumpNum>=136){
-            jumpScore = 30;
-          }else if(jumpNum>=131){
-            jumpScore = 20;
-          }else if(jumpNum>=126){
-            jumpScore = 10;
-          }
-        }else if(sex == 0 && grade ==0){
-          if(jumpNum>=208){
-            jumpScore = 100;
-          }else if(jumpNum>=202){
-            jumpScore = 95;
-          }else if(jumpNum>=196){
-            jumpScore = 90;
-          }else if(jumpNum>=189){
-            jumpScore = 85;
-          }else if(jumpNum>=182){
-            jumpScore = 80;
-          }else if(jumpNum>=179){
-            jumpScore = 78;
-          }else if(jumpNum>=176){
-            jumpScore = 76;
-          }else if(jumpNum>=173){
-            jumpScore = 74;
-          }else if(jumpNum>=170){
-            jumpScore = 72;
-          }else if(jumpNum>=167){
-            jumpScore = 70;
-          }else if(jumpNum>=164){
-            jumpScore = 68;
-          }else if(jumpNum>=161){
-            jumpScore = 66;
-          }else if(jumpNum>=158){
-            jumpScore = 64;
-          }else if(jumpNum>=155){
-            jumpScore = 62;
-          }else if(jumpNum>=152){
-            jumpScore = 60;
-          }else if(jumpNum>=147){
-            jumpScore = 50;
-          }else if(jumpNum>=142){
-            jumpScore = 40;
-          }else if(jumpNum>=137){
-            jumpScore = 30;
-          }else if(jumpNum>=132){
-            jumpScore = 20;
-          }else if(jumpNum>=127){
-            jumpScore = 10;
+        var shortrun = document.getElementsByName("shortruns")[0].value;
+        if (shortrun != "") {
+          var shortrunNum = parseFloat(shortrun);
+          if (shortrunNum < 0 || shortrunNum > 50) {
+            alert("请输入介于0~50的短跑数值");
+          } else if (sex == 1 && grade == 1) {
+            if (shortrunNum <= 6.7 && shortrunNum >= 2) {
+              shortrunScore = 100;
+            } else if (shortrunNum <= 6.8) {
+              shortrunScore = 95;
+            } else if (shortrunNum <= 6.9) {
+              shortrunScore = 90;
+            } else if (shortrunNum <= 7) {
+              shortrunScore = 85;
+            } else if (shortrunNum <= 7.1) {
+              shortrunScore = 80;
+            } else if (shortrunNum <= 7.3) {
+              shortrunScore = 78;
+            } else if (shortrunNum <= 7.5) {
+              shortrunScore = 76;
+            } else if (shortrunNum <= 7.7) {
+              shortrunScore = 74;
+            } else if (shortrunNum <= 7.9) {
+              shortrunScore = 72;
+            } else if (shortrunNum <= 8.1) {
+              shortrunScore = 70;
+            } else if (shortrunNum <= 8.3) {
+              shortrunScore = 68;
+            } else if (shortrunNum <= 8.5) {
+              shortrunScore = 66;
+            } else if (shortrunNum <= 8.7) {
+              shortrunScore = 64;
+            } else if (shortrunNum <= 8.9) {
+              shortrunScore = 62;
+            } else if (shortrunNum <= 9.1) {
+              shortrunScore = 60;
+            } else if (shortrunNum <= 9.3) {
+              shortrunScore = 50;
+            } else if (shortrunNum <= 9.5) {
+              shortrunScore = 40;
+            } else if (shortrunNum <= 9.7) {
+              shortrunScore = 30;
+            } else if (shortrunNum <= 9.9) {
+              shortrunScore = 20;
+            } else if (shortrunNum <= 10.1) {
+              shortrunScore = 10;
+            }
+          } else if (sex == 1 && grade == 0) {
+            if (shortrunNum <= 6.6 && shortrunNum >= 2) {
+              shortrunScore = 100;
+            } else if (shortrunNum <= 6.7) {
+              shortrunScore = 95;
+            } else if (shortrunNum <= 6.8) {
+              shortrunScore = 90;
+            } else if (shortrunNum <= 6.9) {
+              shortrunScore = 85;
+            } else if (shortrunNum <= 7) {
+              shortrunScore = 80;
+            } else if (shortrunNum <= 7.2) {
+              shortrunScore = 78;
+            } else if (shortrunNum <= 7.4) {
+              shortrunScore = 76;
+            } else if (shortrunNum <= 7.6) {
+              shortrunScore = 74;
+            } else if (shortrunNum <= 7.8) {
+              shortrunScore = 72;
+            } else if (shortrunNum <= 8) {
+              shortrunScore = 70;
+            } else if (shortrunNum <= 8.2) {
+              shortrunScore = 68;
+            } else if (shortrunNum <= 8.4) {
+              shortrunScore = 66;
+            } else if (shortrunNum <= 8.6) {
+              shortrunScore = 64;
+            } else if (shortrunNum <= 8.8) {
+              shortrunScore = 62;
+            } else if (shortrunNum <= 9) {
+              shortrunScore = 60;
+            } else if (shortrunNum <= 9.2) {
+              shortrunScore = 50;
+            } else if (shortrunNum <= 9.4) {
+              shortrunScore = 40;
+            } else if (shortrunNum <= 9.6) {
+              shortrunScore = 30;
+            } else if (shortrunNum <= 9.8) {
+              shortrunScore = 20;
+            } else if (shortrunNum <= 10) {
+              shortrunScore = 10;
+            }
+          } else if (sex == 0 && grade == 1) {
+            if (shortrunNum <= 7.5 && shortrunNum >= 2) {
+              shortrunScore = 100;
+            } else if (shortrunNum <= 7.6) {
+              shortrunScore = 95;
+            } else if (shortrunNum <= 7.7) {
+              shortrunScore = 90;
+            } else if (shortrunNum <= 8) {
+              shortrunScore = 85;
+            } else if (shortrunNum <= 8.3) {
+              shortrunScore = 80;
+            } else if (shortrunNum <= 8.5) {
+              shortrunScore = 78;
+            } else if (shortrunNum <= 8.7) {
+              shortrunScore = 76;
+            } else if (shortrunNum <= 8.9) {
+              shortrunScore = 74;
+            } else if (shortrunNum <= 9.1) {
+              shortrunScore = 72;
+            } else if (shortrunNum <= 9.3) {
+              shortrunScore = 70;
+            } else if (shortrunNum <= 9.5) {
+              shortrunScore = 68;
+            } else if (shortrunNum <= 9.7) {
+              shortrunScore = 66;
+            } else if (shortrunNum <= 9.9) {
+              shortrunScore = 64;
+            } else if (shortrunNum <= 10.1) {
+              shortrunScore = 62;
+            } else if (shortrunNum <= 10.3) {
+              shortrunScore = 60;
+            } else if (shortrunNum <= 10.5) {
+              shortrunScore = 50;
+            } else if (shortrunNum <= 10.7) {
+              shortrunScore = 40;
+            } else if (shortrunNum <= 10.9) {
+              shortrunScore = 30;
+            } else if (shortrunNum <= 11.1) {
+              shortrunScore = 20;
+            } else if (shortrunNum <= 11.3) {
+              shortrunScore = 10;
+            }
+          } else if (sex == 0 && grade == 0) {
+            if (shortrunNum <= 7.4 && shortrunNum >= 2) {
+              shortrunScore = 100;
+            } else if (shortrunNum <= 7.5) {
+              shortrunScore = 95;
+            } else if (shortrunNum <= 7.6) {
+              shortrunScore = 90;
+            } else if (shortrunNum <= 7.9) {
+              shortrunScore = 85;
+            } else if (shortrunNum <= 8.2) {
+              shortrunScore = 80;
+            } else if (shortrunNum <= 8.4) {
+              shortrunScore = 78;
+            } else if (shortrunNum <= 8.6) {
+              shortrunScore = 76;
+            } else if (shortrunNum <= 8.8) {
+              shortrunScore = 74;
+            } else if (shortrunNum <= 9) {
+              shortrunScore = 72;
+            } else if (shortrunNum <= 9.2) {
+              shortrunScore = 70;
+            } else if (shortrunNum <= 9.4) {
+              shortrunScore = 68;
+            } else if (shortrunNum <= 9.6) {
+              shortrunScore = 66;
+            } else if (shortrunNum <= 9.8) {
+              shortrunScore = 64;
+            } else if (shortrunNum <= 10) {
+              shortrunScore = 62;
+            } else if (shortrunNum <= 10.2) {
+              shortrunScore = 60;
+            } else if (shortrunNum <= 10.4) {
+              shortrunScore = 50;
+            } else if (shortrunNum <= 10.6) {
+              shortrunScore = 40;
+            } else if (shortrunNum <= 10.8) {
+              shortrunScore = 30;
+            } else if (shortrunNum <= 11) {
+              shortrunScore = 20;
+            } else if (shortrunNum <= 11.2) {
+              shortrunScore = 10;
+            }
           }
         }
-      }
 
-      var shortrun = document.getElementsByName('shortruns')[0].value;
-      if(shortrun!=''){
-        var shortrunNum = parseFloat(shortrun);
-        if(shortrunNum<0 || shortrunNum>50){
-          alert('请输入介于0~50的短跑数值');
-        }else if(sex == 1 && grade == 1){
-          if(shortrunNum<=6.7 && shortrunNum>=2){
-            shortrunScore = 100;
-          }else if(shortrunNum<=6.8){
-            shortrunScore = 95;
-          }else if(shortrunNum<=6.9){
-            shortrunScore = 90;
-          }else if(shortrunNum<=7){
-            shortrunScore = 85;
-          }else if(shortrunNum<=7.1){
-            shortrunScore = 80;
-          }else if(shortrunNum<=7.3){
-            shortrunScore = 78;
-          }else if(shortrunNum<=7.5){
-            shortrunScore = 76;
-          }else if(shortrunNum<=7.7){
-            shortrunScore = 74;
-          }else if(shortrunNum<=7.9){
-            shortrunScore = 72;
-          }else if(shortrunNum<=8.1){
-            shortrunScore = 70;
-          }else if(shortrunNum<=8.3){
-            shortrunScore = 68;
-          }else if(shortrunNum<=8.5){
-            shortrunScore = 66;
-          }else if(shortrunNum<=8.7){
-            shortrunScore = 64;
-          }else if(shortrunNum<=8.9){
-            shortrunScore = 62;
-          }else if(shortrunNum<=9.1){
-            shortrunScore = 60;
-          }else if(shortrunNum<=9.3){
-            shortrunScore = 50;
-          }else if(shortrunNum<=9.5){
-            shortrunScore = 40;
-          }else if(shortrunNum<=9.7){
-            shortrunScore = 30;
-          }else if(shortrunNum<=9.9){
-            shortrunScore = 20;
-          }else if(shortrunNum<=10.1){
-            shortrunScore = 10;
+        var run1000 = document.getElementsByName("1000runs")[0].value;
+        var run800 = document.getElementsByName("800runs")[0].value;
+        var differenceSecond = 0;
+        if (sex == 1 && grade == 1 && run1000 != "") {
+          var run1000Num = parseFloat(run1000);
+          if (run1000Num < 2 || run1000Num > 10) {
+            alert("请输入介于2~10的长跑数值");
+          } else if (run1000Num <= 3.17 && run1000Num >= 2) {
+            longrunScore = 100;
+            if (run1000Num >= 3) {
+              differenceSecond = (3.17 - run1000Num) * 100;
+            } else if (run1000Num >= 2) {
+              differenceSecond = (0.17 + 2.6 - run1000Num) * 100;
+            }
+            if (differenceSecond >= 4 && differenceSecond < 8) {
+              additionScore += 1;
+            } else if (differenceSecond >= 8 && differenceSecond < 12) {
+              additionScore += 2;
+            } else if (differenceSecond >= 12 && differenceSecond < 16) {
+              additionScore += 3;
+            } else if (differenceSecond >= 16 && differenceSecond < 20) {
+              additionScore += 4;
+            } else if (differenceSecond >= 20 && differenceSecond < 23) {
+              additionScore += 5;
+            } else if (differenceSecond >= 23 && differenceSecond < 26) {
+              additionScore += 6;
+            } else if (differenceSecond >= 26 && differenceSecond < 29) {
+              additionScore += 7;
+            } else if (differenceSecond >= 29 && differenceSecond < 32) {
+              additionScore += 8;
+            } else if (differenceSecond >= 32 && differenceSecond < 35) {
+              additionScore += 9;
+            } else if (differenceSecond >= 35) {
+              additionScore += 10;
+            }
+          } else if (run1000Num <= 3.22) {
+            longrunScore = 95;
+          } else if (run1000Num <= 3.27) {
+            longrunScore = 90;
+          } else if (run1000Num <= 3.34) {
+            longrunScore = 85;
+          } else if (run1000Num <= 3.42) {
+            longrunScore = 80;
+          } else if (run1000Num <= 3.47) {
+            longrunScore = 78;
+          } else if (run1000Num <= 3.52) {
+            longrunScore = 76;
+          } else if (run1000Num <= 3.57) {
+            longrunScore = 74;
+          } else if (run1000Num <= 4.02) {
+            longrunScore = 72;
+          } else if (run1000Num <= 4.07) {
+            longrunScore = 70;
+          } else if (run1000Num <= 4.12) {
+            longrunScore = 68;
+          } else if (run1000Num <= 4.17) {
+            longrunScore = 66;
+          } else if (run1000Num <= 4.22) {
+            longrunScore = 64;
+          } else if (run1000Num <= 4.27) {
+            longrunScore = 62;
+          } else if (run1000Num <= 4.32) {
+            longrunScore = 60;
+          } else if (run1000Num <= 4.52) {
+            longrunScore = 50;
+          } else if (run1000Num <= 5.12) {
+            longrunScore = 40;
+          } else if (run1000Num <= 5.32) {
+            longrunScore = 30;
+          } else if (run1000Num <= 5.52) {
+            longrunScore = 20;
+          } else if (run1000Num <= 6.12) {
+            longrunScore = 10;
           }
-        }else if(sex == 1 && grade == 0){
-          if(shortrunNum<=6.6 && shortrunNum>=2){
-            shortrunScore = 100;
-          }else if(shortrunNum<=6.7){
-            shortrunScore = 95;
-          }else if(shortrunNum<=6.8){
-            shortrunScore = 90;
-          }else if(shortrunNum<=6.9){
-            shortrunScore = 85;
-          }else if(shortrunNum<=7){
-            shortrunScore = 80;
-          }else if(shortrunNum<=7.2){
-            shortrunScore = 78;
-          }else if(shortrunNum<=7.4){
-            shortrunScore = 76;
-          }else if(shortrunNum<=7.6){
-            shortrunScore = 74;
-          }else if(shortrunNum<=7.8){
-            shortrunScore = 72;
-          }else if(shortrunNum<=8){
-            shortrunScore = 70;
-          }else if(shortrunNum<=8.2){
-            shortrunScore = 68;
-          }else if(shortrunNum<=8.4){
-            shortrunScore = 66;
-          }else if(shortrunNum<=8.6){
-            shortrunScore = 64;
-          }else if(shortrunNum<=8.8){
-            shortrunScore = 62;
-          }else if(shortrunNum<=9){
-            shortrunScore = 60;
-          }else if(shortrunNum<=9.2){
-            shortrunScore = 50;
-          }else if(shortrunNum<=9.4){
-            shortrunScore = 40;
-          }else if(shortrunNum<=9.6){
-            shortrunScore = 30;
-          }else if(shortrunNum<=9.8){
-            shortrunScore = 20;
-          }else if(shortrunNum<=10){
-            shortrunScore = 10;
+        } else if (sex == 1 && grade == 0 && run1000 != "") {
+          var run1000Num2 = parseFloat(run1000);
+          if (run1000Num2 < 2 || run1000Num2 > 10) {
+            alert("请输入介于2~10的长跑数值");
+          } else if (run1000Num2 <= 3.15 && run1000Num2 >= 2) {
+            longrunScore = 100;
+            if (run1000Num2 >= 3) {
+              differenceSecond = (3.15 - run1000Num2) * 100;
+            } else if (run1000Num2 >= 2) {
+              differenceSecond = (0.15 + 2.6 - run1000Num2) * 100;
+            }
+            if (differenceSecond >= 4 && differenceSecond < 8) {
+              additionScore += 1;
+            } else if (differenceSecond >= 8 && differenceSecond < 12) {
+              additionScore += 2;
+            } else if (differenceSecond >= 12 && differenceSecond < 16) {
+              additionScore += 3;
+            } else if (differenceSecond >= 16 && differenceSecond < 20) {
+              additionScore += 4;
+            } else if (differenceSecond >= 20 && differenceSecond < 23) {
+              additionScore += 5;
+            } else if (differenceSecond >= 23 && differenceSecond < 26) {
+              additionScore += 6;
+            } else if (differenceSecond >= 26 && differenceSecond < 29) {
+              additionScore += 7;
+            } else if (differenceSecond >= 29 && differenceSecond < 32) {
+              additionScore += 8;
+            } else if (differenceSecond >= 32 && differenceSecond < 35) {
+              additionScore += 9;
+            } else if (differenceSecond >= 35) {
+              additionScore += 10;
+            }
+          } else if (run1000Num2 <= 3.2) {
+            longrunScore = 95;
+          } else if (run1000Num2 <= 3.25) {
+            longrunScore = 90;
+          } else if (run1000Num2 <= 3.32) {
+            longrunScore = 85;
+          } else if (run1000Num2 <= 3.4) {
+            longrunScore = 80;
+          } else if (run1000Num2 <= 3.45) {
+            longrunScore = 78;
+          } else if (run1000Num2 <= 3.5) {
+            longrunScore = 76;
+          } else if (run1000Num2 <= 3.55) {
+            longrunScore = 74;
+          } else if (run1000Num2 <= 4.0) {
+            longrunScore = 72;
+          } else if (run1000Num2 <= 4.05) {
+            longrunScore = 70;
+          } else if (run1000Num2 <= 4.1) {
+            longrunScore = 68;
+          } else if (run1000Num2 <= 4.15) {
+            longrunScore = 66;
+          } else if (run1000Num2 <= 4.2) {
+            longrunScore = 64;
+          } else if (run1000Num2 <= 4.25) {
+            longrunScore = 62;
+          } else if (run1000Num2 <= 4.3) {
+            longrunScore = 60;
+          } else if (run1000Num2 <= 4.5) {
+            longrunScore = 50;
+          } else if (run1000Num2 <= 5.1) {
+            longrunScore = 40;
+          } else if (run1000Num2 <= 5.3) {
+            longrunScore = 30;
+          } else if (run1000Num2 <= 5.5) {
+            longrunScore = 20;
+          } else if (run1000Num2 <= 6.1) {
+            longrunScore = 10;
           }
-        }else if(sex == 0 && grade == 1){
-          if(shortrunNum<=7.5 && shortrunNum>=2){
-            shortrunScore = 100;
-          }else if(shortrunNum<=7.6){
-            shortrunScore = 95;
-          }else if(shortrunNum<=7.7){
-            shortrunScore = 90;
-          }else if(shortrunNum<=8){
-            shortrunScore = 85;
-          }else if(shortrunNum<=8.3){
-            shortrunScore = 80;
-          }else if(shortrunNum<=8.5){
-            shortrunScore = 78;
-          }else if(shortrunNum<=8.7){
-            shortrunScore = 76;
-          }else if(shortrunNum<=8.9){
-            shortrunScore = 74;
-          }else if(shortrunNum<=9.1){
-            shortrunScore = 72;
-          }else if(shortrunNum<=9.3){
-            shortrunScore = 70;
-          }else if(shortrunNum<=9.5){
-            shortrunScore = 68;
-          }else if(shortrunNum<=9.7){
-            shortrunScore = 66;
-          }else if(shortrunNum<=9.9){
-            shortrunScore = 64;
-          }else if(shortrunNum<=10.1){
-            shortrunScore = 62;
-          }else if(shortrunNum<=10.3){
-            shortrunScore = 60;
-          }else if(shortrunNum<=10.5){
-            shortrunScore = 50;
-          }else if(shortrunNum<=10.7){
-            shortrunScore = 40;
-          }else if(shortrunNum<=10.9){
-            shortrunScore = 30;
-          }else if(shortrunNum<=11.1){
-            shortrunScore = 20;
-          }else if(shortrunNum<=11.3){
-            shortrunScore = 10;
+        } else if (sex == 0 && grade == 1 && run800 != "") {
+          var run800Num = parseFloat(run800);
+          if (run800Num < 2 || run800Num > 10) {
+            alert("请输入介于2~10的长跑数值");
+          } else if (run800Num <= 3.18 && run800Num >= 2) {
+            longrunScore = 100;
+            if (run800Num >= 3) {
+              differenceSecond = (3.18 - run800Num) * 100;
+            } else if (run800Num >= 2) {
+              differenceSecond = (0.18 + 2.6 - run800Num) * 100;
+            }
+            if (differenceSecond >= 5 && differenceSecond < 10) {
+              additionScore += 1;
+            } else if (differenceSecond >= 10 && differenceSecond < 15) {
+              additionScore += 2;
+            } else if (differenceSecond >= 15 && differenceSecond < 20) {
+              additionScore += 3;
+            } else if (differenceSecond >= 20 && differenceSecond < 25) {
+              additionScore += 4;
+            } else if (differenceSecond >= 25 && differenceSecond < 30) {
+              additionScore += 5;
+            } else if (differenceSecond >= 30 && differenceSecond < 35) {
+              additionScore += 6;
+            } else if (differenceSecond >= 35 && differenceSecond < 40) {
+              additionScore += 7;
+            } else if (differenceSecond >= 40 && differenceSecond < 45) {
+              additionScore += 8;
+            } else if (differenceSecond >= 45 && differenceSecond < 50) {
+              additionScore += 9;
+            } else if (differenceSecond >= 50) {
+              additionScore += 10;
+            }
+          } else if (run800Num <= 3.24) {
+            longrunScore = 95;
+          } else if (run800Num <= 3.3) {
+            longrunScore = 90;
+          } else if (run800Num <= 3.37) {
+            longrunScore = 85;
+          } else if (run800Num <= 3.44) {
+            longrunScore = 80;
+          } else if (run800Num <= 3.49) {
+            longrunScore = 78;
+          } else if (run800Num <= 3.54) {
+            longrunScore = 76;
+          } else if (run800Num <= 3.59) {
+            longrunScore = 74;
+          } else if (run800Num <= 4.04) {
+            longrunScore = 72;
+          } else if (run800Num <= 4.09) {
+            longrunScore = 70;
+          } else if (run800Num <= 4.14) {
+            longrunScore = 68;
+          } else if (run800Num <= 4.19) {
+            longrunScore = 66;
+          } else if (run800Num <= 4.24) {
+            longrunScore = 64;
+          } else if (run800Num <= 4.29) {
+            longrunScore = 62;
+          } else if (run800Num <= 4.34) {
+            longrunScore = 60;
+          } else if (run800Num <= 4.44) {
+            longrunScore = 50;
+          } else if (run800Num <= 4.54) {
+            longrunScore = 40;
+          } else if (run800Num <= 5.04) {
+            longrunScore = 30;
+          } else if (run800Num <= 5.14) {
+            longrunScore = 20;
+          } else if (run800Num <= 5.24) {
+            longrunScore = 10;
           }
-        }else if(sex == 0 && grade == 0){
-          if(shortrunNum<=7.4 && shortrunNum>=2){
-            shortrunScore = 100;
-          }else if(shortrunNum<=7.5){
-            shortrunScore = 95;
-          }else if(shortrunNum<=7.6){
-            shortrunScore = 90;
-          }else if(shortrunNum<=7.9){
-            shortrunScore = 85;
-          }else if(shortrunNum<=8.2){
-            shortrunScore = 80;
-          }else if(shortrunNum<=8.4){
-            shortrunScore = 78;
-          }else if(shortrunNum<=8.6){
-            shortrunScore = 76;
-          }else if(shortrunNum<=8.8){
-            shortrunScore = 74;
-          }else if(shortrunNum<=9){
-            shortrunScore = 72;
-          }else if(shortrunNum<=9.2){
-            shortrunScore = 70;
-          }else if(shortrunNum<=9.4){
-            shortrunScore = 68;
-          }else if(shortrunNum<=9.6){
-            shortrunScore = 66;
-          }else if(shortrunNum<=9.8){
-            shortrunScore = 64;
-          }else if(shortrunNum<=10){
-            shortrunScore = 62;
-          }else if(shortrunNum<=10.2){
-            shortrunScore = 60;
-          }else if(shortrunNum<=10.4){
-            shortrunScore = 50;
-          }else if(shortrunNum<=10.6){
-            shortrunScore = 40;
-          }else if(shortrunNum<=10.8){
-            shortrunScore = 30;
-          }else if(shortrunNum<=11){
-            shortrunScore = 20;
-          }else if(shortrunNum<=11.2){
-            shortrunScore = 10;
+        } else if (sex == 0 && grade == 0 && run800 != "") {
+          var run800Num2 = parseFloat(run800);
+          if (run800Num2 < 2 || run800Num2 > 10) {
+            alert("请输入介于2~10的长跑数值");
+          } else if (run800Num2 <= 3.16 && run800Num2 >= 2) {
+            longrunScore = 100;
+            if (run800Num2 >= 3) {
+              differenceSecond = (3.16 - run800Num2) * 100;
+            } else if (run800Num2 >= 2) {
+              differenceSecond = (0.16 + 2.6 - run800Num2) * 100;
+            }
+            if (differenceSecond >= 5 && differenceSecond < 10) {
+              additionScore += 1;
+            } else if (differenceSecond >= 10 && differenceSecond < 15) {
+              additionScore += 2;
+            } else if (differenceSecond >= 15 && differenceSecond < 20) {
+              additionScore += 3;
+            } else if (differenceSecond >= 20 && differenceSecond < 25) {
+              additionScore += 4;
+            } else if (differenceSecond >= 25 && differenceSecond < 30) {
+              additionScore += 5;
+            } else if (differenceSecond >= 30 && differenceSecond < 35) {
+              additionScore += 6;
+            } else if (differenceSecond >= 35 && differenceSecond < 40) {
+              additionScore += 7;
+            } else if (differenceSecond >= 40 && differenceSecond < 45) {
+              additionScore += 8;
+            } else if (differenceSecond >= 45 && differenceSecond < 50) {
+              additionScore += 9;
+            } else if (differenceSecond >= 50) {
+              additionScore += 10;
+            }
+          } else if (run800Num2 <= 3.22) {
+            longrunScore = 95;
+          } else if (run800Num2 <= 3.28) {
+            longrunScore = 90;
+          } else if (run800Num2 <= 3.35) {
+            longrunScore = 85;
+          } else if (run800Num2 <= 4.42) {
+            longrunScore = 80;
+          } else if (run800Num2 <= 3.47) {
+            longrunScore = 78;
+          } else if (run800Num2 <= 3.52) {
+            longrunScore = 76;
+          } else if (run800Num2 <= 3.57) {
+            longrunScore = 74;
+          } else if (run800Num2 <= 4.02) {
+            longrunScore = 72;
+          } else if (run800Num2 <= 4.07) {
+            longrunScore = 70;
+          } else if (run800Num2 <= 4.12) {
+            longrunScore = 68;
+          } else if (run800Num2 <= 4.17) {
+            longrunScore = 66;
+          } else if (run800Num2 <= 4.22) {
+            longrunScore = 64;
+          } else if (run800Num2 <= 4.27) {
+            longrunScore = 62;
+          } else if (run800Num2 <= 4.32) {
+            longrunScore = 60;
+          } else if (run800Num2 <= 4.42) {
+            longrunScore = 50;
+          } else if (run800Num2 <= 4.52) {
+            longrunScore = 40;
+          } else if (run800Num2 <= 5.02) {
+            longrunScore = 30;
+          } else if (run800Num2 <= 5.12) {
+            longrunScore = 20;
+          } else if (run800Num2 <= 5.22) {
+            longrunScore = 10;
           }
         }
-      }
 
-      var run1000 = document.getElementsByName('1000runs')[0].value;
-      var run800 = document.getElementsByName('800runs')[0].value;
-      var differenceSecond = 0;
-      if(sex == 1 && grade == 1 && run1000!=''){
-        var run1000Num = parseFloat(run1000);
-        if(run1000Num<2 || run1000Num>10){
-          alert('请输入介于2~10的长跑数值');
-        }else if(run1000Num<=3.17 && run1000Num>=2){
-          longrunScore = 100;
-          if(run1000Num>=3){
-            differenceSecond = (3.17-run1000Num)*100;
-          }else if(run1000Num>=2){
-            differenceSecond = (0.17+2.6-run1000Num)*100;
+        var pullup = document.getElementsByName("pullups")[0].value;
+        var situp = document.getElementsByName("situps")[0].value;
+        var differenceNum = 0;
+        if (sex == 1 && grade == 1 && pullup != "") {
+          var pullupNum = parseFloat(pullup);
+          if (pullupNum < 0 || pullupNum > 100) {
+            alert("请输入介于0~100的引体向上个数");
+          } else if (pullupNum >= 19) {
+            pullupsitupScore = 100;
+            differenceNum = pullupNum - 19;
+            if (differenceNum >= 1 && differenceNum < 2) {
+              additionScore += 1;
+            } else if (differenceNum >= 2 && differenceNum < 3) {
+              additionScore += 2;
+            } else if (differenceNum >= 3 && differenceNum < 4) {
+              additionScore += 3;
+            } else if (differenceNum >= 4 && differenceNum < 5) {
+              additionScore += 4;
+            } else if (differenceNum >= 5 && differenceNum < 6) {
+              additionScore += 5;
+            } else if (differenceNum >= 6 && differenceNum < 7) {
+              additionScore += 6;
+            } else if (differenceNum >= 7 && differenceNum < 8) {
+              additionScore += 7;
+            } else if (differenceNum >= 8 && differenceNum < 9) {
+              additionScore += 8;
+            } else if (differenceNum >= 9 && differenceNum < 10) {
+              additionScore += 9;
+            } else if (differenceNum >= 10) {
+              additionScore += 10;
+            }
+          } else if (pullupNum >= 18) {
+            pullupsitupScore = 95;
+          } else if (pullupNum >= 17) {
+            pullupsitupScore = 90;
+          } else if (pullupNum >= 16) {
+            pullupsitupScore = 85;
+          } else if (pullupNum >= 15) {
+            pullupsitupScore = 80;
+          } else if (pullupNum >= 14) {
+            pullupsitupScore = 76;
+          } else if (pullupNum >= 13) {
+            pullupsitupScore = 72;
+          } else if (pullupNum >= 12) {
+            pullupsitupScore = 68;
+          } else if (pullupNum >= 11) {
+            pullupsitupScore = 64;
+          } else if (pullupNum >= 10) {
+            pullupsitupScore = 60;
+          } else if (pullupNum >= 9) {
+            pullupsitupScore = 50;
+          } else if (pullupNum >= 8) {
+            pullupsitupScore = 40;
+          } else if (pullupNum >= 7) {
+            pullupsitupScore = 30;
+          } else if (pullupNum >= 6) {
+            pullupsitupScore = 20;
+          } else if (pullupNum >= 1) {
+            pullupsitupScore = 10;
           }
-          if(differenceSecond>=4&&differenceSecond<8){
-            additionScore+=1;
-          }else if(differenceSecond>=8&&differenceSecond<12){
-            additionScore+=2;
-          }else if(differenceSecond>=12&&differenceSecond<16){
-            additionScore+=3;
-          }else if(differenceSecond>=16&&differenceSecond<20){
-            additionScore+=4;
-          }else if(differenceSecond>=20&&differenceSecond<23){
-            additionScore+=5;
-          }else if(differenceSecond>=23&&differenceSecond<26){
-            additionScore+=6;
-          }else if(differenceSecond>=26&&differenceSecond<29){
-            additionScore+=7;
-          }else if(differenceSecond>=29&&differenceSecond<32){
-            additionScore+=8;
-          }else if(differenceSecond>=32&&differenceSecond<35){
-            additionScore+=9;
-          }else if(differenceSecond>=35){
-            additionScore+=10;
+        } else if (sex == 1 && grade == 0 && pullup != "") {
+          var pullupNum2 = parseFloat(pullup);
+          if (pullupNum2 < 0 || pullupNum2 > 100) {
+            alert("请输入介于0~100的引体向上个数");
+          } else if (pullupNum2 >= 20) {
+            pullupsitupScore = 100;
+            differenceNum = pullupNum2 - 20;
+            if (differenceNum >= 1 && differenceNum < 2) {
+              additionScore += 1;
+            } else if (differenceNum >= 2 && differenceNum < 3) {
+              additionScore += 2;
+            } else if (differenceNum >= 3 && differenceNum < 4) {
+              additionScore += 3;
+            } else if (differenceNum >= 4 && differenceNum < 5) {
+              additionScore += 4;
+            } else if (differenceNum >= 5 && differenceNum < 6) {
+              additionScore += 5;
+            } else if (differenceNum >= 6 && differenceNum < 7) {
+              additionScore += 6;
+            } else if (differenceNum >= 7 && differenceNum < 8) {
+              additionScore += 7;
+            } else if (differenceNum >= 8 && differenceNum < 9) {
+              additionScore += 8;
+            } else if (differenceNum >= 9 && differenceNum < 10) {
+              additionScore += 9;
+            } else if (differenceNum >= 10) {
+              additionScore += 10;
+            }
+          } else if (pullupNum2 >= 19) {
+            pullupsitupScore = 95;
+          } else if (pullupNum2 >= 18) {
+            pullupsitupScore = 90;
+          } else if (pullupNum2 >= 17) {
+            pullupsitupScore = 85;
+          } else if (pullupNum2 >= 16) {
+            pullupsitupScore = 80;
+          } else if (pullupNum2 >= 15) {
+            pullupsitupScore = 76;
+          } else if (pullupNum2 >= 14) {
+            pullupsitupScore = 72;
+          } else if (pullupNum2 >= 13) {
+            pullupsitupScore = 68;
+          } else if (pullupNum2 >= 12) {
+            pullupsitupScore = 64;
+          } else if (pullupNum2 >= 11) {
+            pullupsitupScore = 60;
+          } else if (pullupNum2 >= 10) {
+            pullupsitupScore = 50;
+          } else if (pullupNum2 >= 9) {
+            pullupsitupScore = 40;
+          } else if (pullupNum2 >= 8) {
+            pullupsitupScore = 30;
+          } else if (pullupNum2 >= 7) {
+            pullupsitupScore = 20;
+          } else if (pullupNum2 >= 2) {
+            pullupsitupScore = 10;
           }
-        }else if(run1000Num<=3.22){
-          longrunScore = 95;
-        }else if(run1000Num<=3.27){
-          longrunScore = 90;
-        }else if(run1000Num<=3.34){
-          longrunScore = 85;
-        }else if(run1000Num<=3.42){
-          longrunScore = 80;
-        }else if(run1000Num<=3.47){
-          longrunScore = 78;
-        }else if(run1000Num<=3.52){
-          longrunScore = 76;
-        }else if(run1000Num<=3.57){
-          longrunScore = 74;
-        }else if(run1000Num<=4.02){
-          longrunScore = 72;
-        }else if(run1000Num<=4.07){
-          longrunScore = 70;
-        }else if(run1000Num<=4.12){
-          longrunScore = 68;
-        }else if(run1000Num<=4.17){
-          longrunScore = 66;
-        }else if(run1000Num<=4.22){
-          longrunScore = 64;
-        }else if(run1000Num<=4.27){
-          longrunScore = 62;
-        }else if(run1000Num<=4.32){
-          longrunScore = 60;
-        }else if(run1000Num<=4.52){
-          longrunScore = 50;
-        }else if(run1000Num<=5.12){
-          longrunScore = 40;
-        }else if(run1000Num<=5.32){
-          longrunScore = 30;
-        }else if(run1000Num<=5.52){
-          longrunScore = 20;
-        }else if(run1000Num<=6.12){
-          longrunScore = 10;
+        } else if (sex == 0 && grade == 1 && situp != "") {
+          var situpNum = parseFloat(situp);
+          if (situpNum < 0 || situpNum > 100) {
+            alert("请输入介于0~100的仰卧起坐个数");
+          } else if (situpNum >= 56) {
+            pullupsitupScore = 100;
+            differenceNum = situpNum - 56;
+            if (differenceNum >= 2 && differenceNum < 4) {
+              additionScore += 1;
+            } else if (differenceNum >= 4 && differenceNum < 6) {
+              additionScore += 2;
+            } else if (differenceNum >= 6 && differenceNum < 7) {
+              additionScore += 3;
+            } else if (differenceNum >= 7 && differenceNum < 8) {
+              additionScore += 4;
+            } else if (differenceNum >= 8 && differenceNum < 9) {
+              additionScore += 5;
+            } else if (differenceNum >= 9 && differenceNum < 10) {
+              additionScore += 6;
+            } else if (differenceNum >= 10 && differenceNum < 11) {
+              additionScore += 7;
+            } else if (differenceNum >= 11 && differenceNum < 12) {
+              additionScore += 8;
+            } else if (differenceNum >= 12 && differenceNum < 13) {
+              additionScore += 9;
+            } else if (differenceNum >= 13) {
+              additionScore += 10;
+            }
+          } else if (situpNum >= 54) {
+            pullupsitupScore = 95;
+          } else if (situpNum >= 52) {
+            pullupsitupScore = 90;
+          } else if (situpNum >= 49) {
+            pullupsitupScore = 85;
+          } else if (situpNum >= 46) {
+            pullupsitupScore = 80;
+          } else if (situpNum >= 44) {
+            pullupsitupScore = 78;
+          } else if (situpNum >= 42) {
+            pullupsitupScore = 76;
+          } else if (situpNum >= 40) {
+            pullupsitupScore = 74;
+          } else if (situpNum >= 38) {
+            pullupsitupScore = 72;
+          } else if (situpNum >= 36) {
+            pullupsitupScore = 70;
+          } else if (situpNum >= 34) {
+            pullupsitupScore = 68;
+          } else if (situpNum >= 32) {
+            pullupsitupScore = 66;
+          } else if (situpNum >= 30) {
+            pullupsitupScore = 64;
+          } else if (situpNum >= 28) {
+            pullupsitupScore = 62;
+          } else if (situpNum >= 26) {
+            pullupsitupScore = 60;
+          } else if (situpNum >= 24) {
+            pullupsitupScore = 50;
+          } else if (situpNum >= 22) {
+            pullupsitupScore = 40;
+          } else if (situpNum >= 20) {
+            pullupsitupScore = 30;
+          } else if (situpNum >= 18) {
+            pullupsitupScore = 20;
+          } else if (situpNum >= 16) {
+            pullupsitupScore = 10;
+          }
+        } else if (sex == 0 && grade == 0 && situp != "") {
+          var situpNum2 = parseFloat(situp);
+          if (situpNum2 < 0 || situpNum2 > 100) {
+            alert("请输入介于0~100的仰卧起坐个数");
+          } else if (situpNum2 >= 57) {
+            pullupsitupScore = 100;
+            differenceNum = situpNum2 - 57;
+            if (differenceNum >= 2 && differenceNum < 4) {
+              additionScore += 1;
+            } else if (differenceNum >= 4 && differenceNum < 6) {
+              additionScore += 2;
+            } else if (differenceNum >= 6 && differenceNum < 7) {
+              additionScore += 3;
+            } else if (differenceNum >= 7 && differenceNum < 8) {
+              additionScore += 4;
+            } else if (differenceNum >= 8 && differenceNum < 9) {
+              additionScore += 5;
+            } else if (differenceNum >= 9 && differenceNum < 10) {
+              additionScore += 6;
+            } else if (differenceNum >= 10 && differenceNum < 11) {
+              additionScore += 7;
+            } else if (differenceNum >= 11 && differenceNum < 12) {
+              additionScore += 8;
+            } else if (differenceNum >= 12 && differenceNum < 13) {
+              additionScore += 9;
+            } else if (differenceNum >= 13) {
+              additionScore += 10;
+            }
+          } else if (situpNum2 >= 55) {
+            pullupsitupScore = 95;
+          } else if (situpNum2 >= 53) {
+            pullupsitupScore = 90;
+          } else if (situpNum2 >= 50) {
+            pullupsitupScore = 85;
+          } else if (situpNum2 >= 47) {
+            pullupsitupScore = 80;
+          } else if (situpNum2 >= 45) {
+            pullupsitupScore = 78;
+          } else if (situpNum2 >= 43) {
+            pullupsitupScore = 76;
+          } else if (situpNum2 >= 41) {
+            pullupsitupScore = 74;
+          } else if (situpNum2 >= 39) {
+            pullupsitupScore = 72;
+          } else if (situpNum2 >= 37) {
+            pullupsitupScore = 70;
+          } else if (situpNum2 >= 35) {
+            pullupsitupScore = 68;
+          } else if (situpNum2 >= 33) {
+            pullupsitupScore = 66;
+          } else if (situpNum2 >= 31) {
+            pullupsitupScore = 64;
+          } else if (situpNum2 >= 29) {
+            pullupsitupScore = 62;
+          } else if (situpNum2 >= 27) {
+            pullupsitupScore = 60;
+          } else if (situpNum2 >= 25) {
+            pullupsitupScore = 50;
+          } else if (situpNum2 >= 23) {
+            pullupsitupScore = 40;
+          } else if (situpNum2 >= 21) {
+            pullupsitupScore = 30;
+          } else if (situpNum2 >= 19) {
+            pullupsitupScore = 20;
+          } else if (situpNum2 >= 17) {
+            pullupsitupScore = 10;
+          }
         }
-      }else if(sex == 1 && grade == 0 && run1000!=''){
-        var run1000Num2 = parseFloat(run1000);
-        if(run1000Num2<2 || run1000Num2>10){
-          alert('请输入介于2~10的长跑数值');
-        }else if(run1000Num2<=3.15 && run1000Num2>=2){
-          longrunScore = 100;
-          if(run1000Num2>=3){
-            differenceSecond = (3.15-run1000Num2)*100;
-          }else if(run1000Num2>=2){
-            differenceSecond = (0.15+2.6-run1000Num2)*100;
-          }
-          if(differenceSecond>=4&&differenceSecond<8){
-            additionScore+=1;
-          }else if(differenceSecond>=8&&differenceSecond<12){
-            additionScore+=2;
-          }else if(differenceSecond>=12&&differenceSecond<16){
-            additionScore+=3;
-          }else if(differenceSecond>=16&&differenceSecond<20){
-            additionScore+=4;
-          }else if(differenceSecond>=20&&differenceSecond<23){
-            additionScore+=5;
-          }else if(differenceSecond>=23&&differenceSecond<26){
-            additionScore+=6;
-          }else if(differenceSecond>=26&&differenceSecond<29){
-            additionScore+=7;
-          }else if(differenceSecond>=29&&differenceSecond<32){
-            additionScore+=8;
-          }else if(differenceSecond>=32&&differenceSecond<35){
-            additionScore+=9;
-          }else if(differenceSecond>=35){
-            additionScore+=10;
-          }
-        }else if(run1000Num2<=3.20){
-          longrunScore = 95;
-        }else if(run1000Num2<=3.25){
-          longrunScore = 90;
-        }else if(run1000Num2<=3.32){
-          longrunScore = 85;
-        }else if(run1000Num2<=3.40){
-          longrunScore = 80;
-        }else if(run1000Num2<=3.45){
-          longrunScore = 78;
-        }else if(run1000Num2<=3.50){
-          longrunScore = 76;
-        }else if(run1000Num2<=3.55){
-          longrunScore = 74;
-        }else if(run1000Num2<=4.00){
-          longrunScore = 72;
-        }else if(run1000Num2<=4.05){
-          longrunScore = 70;
-        }else if(run1000Num2<=4.10){
-          longrunScore = 68;
-        }else if(run1000Num2<=4.15){
-          longrunScore = 66;
-        }else if(run1000Num2<=4.20){
-          longrunScore = 64;
-        }else if(run1000Num2<=4.25){
-          longrunScore = 62;
-        }else if(run1000Num2<=4.30){
-          longrunScore = 60;
-        }else if(run1000Num2<=4.50){
-          longrunScore = 50;
-        }else if(run1000Num2<=5.10){
-          longrunScore = 40;
-        }else if(run1000Num2<=5.30){
-          longrunScore = 30;
-        }else if(run1000Num2<=5.50){
-          longrunScore = 20;
-        }else if(run1000Num2<=6.10){
-          longrunScore = 10;
+
+        score = (
+          BMIScore * 0.15 +
+          breathScore * 0.15 +
+          reachScore * 0.1 +
+          jumpScore * 0.1 +
+          shortrunScore * 0.2 +
+          longrunScore * 0.2 +
+          pullupsitupScore * 0.1 +
+          additionScore
+        ).toFixed(1);
+        result.textContent = score;
+        additionEl.textContent = additionScore;
+        totalLevelEl.textContent = scoreToLevel(parseFloat(score));
+
+        const bmiValid = BMI.value !== "";
+        setRow("bmi", bmiValid ? BMI.value : "", BMIScore, bmiValid);
+
+        const breathValid = breath !== "";
+        setRow("breath", breathValid ? breath : "", breathScore, breathValid);
+
+        const sprintValid = shortrun !== "";
+        setRow(
+          "sprint",
+          sprintValid ? shortrun : "",
+          shortrunScore,
+          sprintValid
+        );
+
+        const reachValid = reach !== "";
+        setRow("sitreach", reachValid ? reach : "", reachScore, reachValid);
+
+        const jumpValid = jump !== "";
+        setRow("longjump", jumpValid ? jump : "", jumpScore, jumpValid);
+
+        if (sex === 1) {
+          const strengthValid = pullup !== "";
+          setRow(
+            "strength",
+            strengthValid ? pullup : "",
+            pullupsitupScore,
+            strengthValid
+          );
+          const enduranceValid = run1000 !== "";
+          setRow(
+            "endurance",
+            enduranceValid ? run1000 : "",
+            longrunScore,
+            enduranceValid
+          );
+        } else {
+          const strengthValid = situp !== "";
+          setRow(
+            "strength",
+            strengthValid ? situp : "",
+            pullupsitupScore,
+            strengthValid
+          );
+          const enduranceValid = run800 !== "";
+          setRow(
+            "endurance",
+            enduranceValid ? run800 : "",
+            longrunScore,
+            enduranceValid
+          );
         }
-      }else if(sex == 0 && grade == 1 && run800!=''){
-        var run800Num = parseFloat(run800);
-        if(run800Num<2 || run800Num>10){
-          alert('请输入介于2~10的长跑数值');
-        }else if(run800Num<=3.18 && run800Num>=2){
-          longrunScore = 100;
-          if(run800Num>=3){
-            differenceSecond = (3.18-run800Num)*100;
-          }else if(run800Num>=2){
-            differenceSecond = (0.18+2.6-run800Num)*100;
-          }
-          if(differenceSecond>=5&&differenceSecond<10){
-            additionScore+=1;
-          }else if(differenceSecond>=10&&differenceSecond<15){
-            additionScore+=2;
-          }else if(differenceSecond>=15&&differenceSecond<20){
-            additionScore+=3;
-          }else if(differenceSecond>=20&&differenceSecond<25){
-            additionScore+=4;
-          }else if(differenceSecond>=25&&differenceSecond<30){
-            additionScore+=5;
-          }else if(differenceSecond>=30&&differenceSecond<35){
-            additionScore+=6;
-          }else if(differenceSecond>=35&&differenceSecond<40){
-            additionScore+=7;
-          }else if(differenceSecond>=40&&differenceSecond<45){
-            additionScore+=8;
-          }else if(differenceSecond>=45&&differenceSecond<50){
-            additionScore+=9;
-          }else if(differenceSecond>=50){
-            additionScore+=10;
-          }
-        }else if(run800Num<=3.24){
-          longrunScore = 95;
-        }else if(run800Num<=3.30){
-          longrunScore = 90;
-        }else if(run800Num<=3.37){
-          longrunScore = 85;
-        }else if(run800Num<=3.44){
-          longrunScore = 80;
-        }else if(run800Num<=3.49){
-          longrunScore = 78;
-        }else if(run800Num<=3.54){
-          longrunScore = 76;
-        }else if(run800Num<=3.59){
-          longrunScore = 74;
-        }else if(run800Num<=4.04){
-          longrunScore = 72;
-        }else if(run800Num<=4.09){
-          longrunScore = 70;
-        }else if(run800Num<=4.14){
-          longrunScore = 68;
-        }else if(run800Num<=4.19){
-          longrunScore = 66;
-        }else if(run800Num<=4.24){
-          longrunScore = 64;
-        }else if(run800Num<=4.29){
-          longrunScore = 62;
-        }else if(run800Num<=4.34){
-          longrunScore = 60;
-        }else if(run800Num<=4.44){
-          longrunScore = 50;
-        }else if(run800Num<=4.54){
-          longrunScore = 40;
-        }else if(run800Num<=5.04){
-          longrunScore = 30;
-        }else if(run800Num<=5.14){
-          longrunScore = 20;
-        }else if(run800Num<=5.24){
-          longrunScore = 10;
+      };
+
+      document.onkeydown = function (e) {
+        if (e.keyCode == 13) {
+          document.getElementById("compute").click();
         }
-      }else if(sex == 0 && grade == 0 && run800!=''){
-        var run800Num2 = parseFloat(run800);
-        if(run800Num2<2 || run800Num2>10){
-          alert('请输入介于2~10的长跑数值');
-        }else if(run800Num2<=3.16 && run800Num2>=2){
-          longrunScore = 100;
-          if(run800Num2>=3){
-            differenceSecond = (3.16-run800Num2)*100;
-          }else if(run800Num2>=2){
-            differenceSecond = (0.16+2.6-run800Num2)*100;
-          }
-          if(differenceSecond>=5&&differenceSecond<10){
-            additionScore+=1;
-          }else if(differenceSecond>=10&&differenceSecond<15){
-            additionScore+=2;
-          }else if(differenceSecond>=15&&differenceSecond<20){
-            additionScore+=3;
-          }else if(differenceSecond>=20&&differenceSecond<25){
-            additionScore+=4;
-          }else if(differenceSecond>=25&&differenceSecond<30){
-            additionScore+=5;
-          }else if(differenceSecond>=30&&differenceSecond<35){
-            additionScore+=6;
-          }else if(differenceSecond>=35&&differenceSecond<40){
-            additionScore+=7;
-          }else if(differenceSecond>=40&&differenceSecond<45){
-            additionScore+=8;
-          }else if(differenceSecond>=45&&differenceSecond<50){
-            additionScore+=9;
-          }else if(differenceSecond>=50){
-            additionScore+=10;
-          }
-        }else if(run800Num2<=3.22){
-          longrunScore = 95;
-        }else if(run800Num2<=3.28){
-          longrunScore = 90;
-        }else if(run800Num2<=3.35){
-          longrunScore = 85;
-        }else if(run800Num2<=4.42){
-          longrunScore = 80;
-        }else if(run800Num2<=3.47){
-          longrunScore = 78;
-        }else if(run800Num2<=3.52){
-          longrunScore = 76;
-        }else if(run800Num2<=3.57){
-          longrunScore = 74;
-        }else if(run800Num2<=4.02){
-          longrunScore = 72;
-        }else if(run800Num2<=4.07){
-          longrunScore = 70;
-        }else if(run800Num2<=4.12){
-          longrunScore = 68;
-        }else if(run800Num2<=4.17){
-          longrunScore = 66;
-        }else if(run800Num2<=4.22){
-          longrunScore = 64;
-        }else if(run800Num2<=4.27){
-          longrunScore = 62;
-        }else if(run800Num2<=4.32){
-          longrunScore = 60;
-        }else if(run800Num2<=4.42){
-          longrunScore = 50;
-        }else if(run800Num2<=4.52){
-          longrunScore = 40;
-        }else if(run800Num2<=5.02){
-          longrunScore = 30;
-        }else if(run800Num2<=5.12){
-          longrunScore = 20;
-        }else if(run800Num2<=5.22){
-          longrunScore = 10;
-        }
-      }
+      };
 
-      var pullup = document.getElementsByName('pullups')[0].value;
-      var situp = document.getElementsByName('situps')[0].value;
-      var differenceNum = 0;
-      if(sex == 1 && grade == 1 && pullup!=''){
-        var pullupNum = parseFloat(pullup);
-        if(pullupNum<0 || pullupNum>100){
-          alert('请输入介于0~100的引体向上个数');
-        }else if(pullupNum>=19){
-          pullupsitupScore= 100;
-          differenceNum = pullupNum-19;
-          if(differenceNum>=1&&differenceNum<2){
-            additionScore+=1;
-          }else if(differenceNum>=2&&differenceNum<3){
-            additionScore+=2;
-          }else if(differenceNum>=3&&differenceNum<4){
-            additionScore+=3;
-          }else if(differenceNum>=4&&differenceNum<5){
-            additionScore+=4;
-          }else if(differenceNum>=5&&differenceNum<6){
-            additionScore+=5;
-          }else if(differenceNum>=6&&differenceNum<7){
-            additionScore+=6;
-          }else if(differenceNum>=7&&differenceNum<8){
-            additionScore+=7;
-          }else if(differenceNum>=8&&differenceNum<9){
-            additionScore+=8;
-          }else if(differenceNum>=9&&differenceNum<10){
-            additionScore+=9;
-          }else if(differenceNum>=10){
-            additionScore+=10;
-          }
-        }else if(pullupNum>=18){
-          pullupsitupScore= 95;
-        }else if(pullupNum>=17){
-          pullupsitupScore= 90;
-        }else if(pullupNum>=16){
-          pullupsitupScore= 85;
-        }else if(pullupNum>=15){
-          pullupsitupScore= 80;
-        }else if(pullupNum>=14){
-          pullupsitupScore= 76;
-        }else if(pullupNum>=13){
-          pullupsitupScore= 72;
-        }else if(pullupNum>=12){
-          pullupsitupScore= 68;
-        }else if(pullupNum>=11){
-          pullupsitupScore= 64;
-        }else if(pullupNum>=10){
-          pullupsitupScore= 60;
-        }else if(pullupNum>=9){
-          pullupsitupScore= 50;
-        }else if(pullupNum>=8){
-          pullupsitupScore= 40;
-        }else if(pullupNum>=7){
-          pullupsitupScore= 30;
-        }else if(pullupNum>=6){
-          pullupsitupScore= 20;
-        }else if(pullupNum>=1){
-          pullupsitupScore= 10;
-        }
-      }else if(sex == 1 && grade == 0 && pullup!=''){
-        var pullupNum2 = parseFloat(pullup);
-        if(pullupNum2<0 || pullupNum2>100){
-          alert('请输入介于0~100的引体向上个数');
-        }else if(pullupNum2>=20){
-          pullupsitupScore= 100;
-          differenceNum = pullupNum2-20;
-          if(differenceNum>=1&&differenceNum<2){
-            additionScore+=1;
-          }else if(differenceNum>=2&&differenceNum<3){
-            additionScore+=2;
-          }else if(differenceNum>=3&&differenceNum<4){
-            additionScore+=3;
-          }else if(differenceNum>=4&&differenceNum<5){
-            additionScore+=4;
-          }else if(differenceNum>=5&&differenceNum<6){
-            additionScore+=5;
-          }else if(differenceNum>=6&&differenceNum<7){
-            additionScore+=6;
-          }else if(differenceNum>=7&&differenceNum<8){
-            additionScore+=7;
-          }else if(differenceNum>=8&&differenceNum<9){
-            additionScore+=8;
-          }else if(differenceNum>=9&&differenceNum<10){
-            additionScore+=9;
-          }else if(differenceNum>=10){
-            additionScore+=10;
-          }
-        }else if(pullupNum2>=19){
-          pullupsitupScore= 95;
-        }else if(pullupNum2>=18){
-          pullupsitupScore= 90;
-        }else if(pullupNum2>=17){
-          pullupsitupScore= 85;
-        }else if(pullupNum2>=16){
-          pullupsitupScore= 80;
-        }else if(pullupNum2>=15){
-          pullupsitupScore= 76;
-        }else if(pullupNum2>=14){
-          pullupsitupScore= 72;
-        }else if(pullupNum2>=13){
-          pullupsitupScore= 68;
-        }else if(pullupNum2>=12){
-          pullupsitupScore= 64;
-        }else if(pullupNum2>=11){
-          pullupsitupScore= 60;
-        }else if(pullupNum2>=10){
-          pullupsitupScore= 50;
-        }else if(pullupNum2>=9){
-          pullupsitupScore= 40;
-        }else if(pullupNum2>=8){
-          pullupsitupScore= 30;
-        }else if(pullupNum2>=7){
-          pullupsitupScore= 20;
-        }else if(pullupNum2>=2){
-          pullupsitupScore= 10;
-        }
-      }else if(sex == 0 && grade == 1 && situp!=''){
-        var situpNum = parseFloat(situp);
-        if(situpNum<0 || situpNum>100){
-          alert('请输入介于0~100的仰卧起坐个数');
-        }else if(situpNum>=56){
-          pullupsitupScore= 100;
-          differenceNum = situpNum-56;
-          if(differenceNum>=2&&differenceNum<4){
-            additionScore+=1;
-          }else if(differenceNum>=4&&differenceNum<6){
-            additionScore+=2;
-          }else if(differenceNum>=6&&differenceNum<7){
-            additionScore+=3;
-          }else if(differenceNum>=7&&differenceNum<8){
-            additionScore+=4;
-          }else if(differenceNum>=8&&differenceNum<9){
-            additionScore+=5;
-          }else if(differenceNum>=9&&differenceNum<10){
-            additionScore+=6;
-          }else if(differenceNum>=10&&differenceNum<11){
-            additionScore+=7;
-          }else if(differenceNum>=11&&differenceNum<12){
-            additionScore+=8;
-          }else if(differenceNum>=12&&differenceNum<13){
-            additionScore+=9;
-          }else if(differenceNum>=13){
-            additionScore+=10;
-          }
-        }else if(situpNum>=54){
-          pullupsitupScore= 95;
-        }else if(situpNum>=52){
-          pullupsitupScore= 90;
-        }else if(situpNum>=49){
-          pullupsitupScore= 85;
-        }else if(situpNum>=46){
-          pullupsitupScore= 80;
-        }else if(situpNum>=44){
-          pullupsitupScore= 78;
-        }else if(situpNum>=42){
-          pullupsitupScore= 76;
-        }else if(situpNum>=40){
-          pullupsitupScore= 74;
-        }else if(situpNum>=38){
-          pullupsitupScore= 72;
-        }else if(situpNum>=36){
-          pullupsitupScore= 70;
-        }else if(situpNum>=34){
-          pullupsitupScore= 68;
-        }else if(situpNum>=32){
-          pullupsitupScore= 66;
-        }else if(situpNum>=30){
-          pullupsitupScore= 64;
-        }else if(situpNum>=28){
-          pullupsitupScore= 62;
-        }else if(situpNum>=26){
-          pullupsitupScore= 60;
-        }else if(situpNum>=24){
-          pullupsitupScore= 50;
-        }else if(situpNum>=22){
-          pullupsitupScore= 40;
-        }else if(situpNum>=20){
-          pullupsitupScore= 30;
-        }else if(situpNum>=18){
-          pullupsitupScore= 20;
-        }else if(situpNum>=16){
-          pullupsitupScore= 10;
-        }
-      }else if(sex == 0 && grade == 0 && situp!=''){
-        var situpNum2 = parseFloat(situp);
-        if(situpNum2<0 || situpNum2>100){
-          alert('请输入介于0~100的仰卧起坐个数');
-        }else if(situpNum2>=57){
-          pullupsitupScore= 100;
-          differenceNum = situpNum2-57;
-          if(differenceNum>=2&&differenceNum<4){
-            additionScore+=1;
-          }else if(differenceNum>=4&&differenceNum<6){
-            additionScore+=2;
-          }else if(differenceNum>=6&&differenceNum<7){
-            additionScore+=3;
-          }else if(differenceNum>=7&&differenceNum<8){
-            additionScore+=4;
-          }else if(differenceNum>=8&&differenceNum<9){
-            additionScore+=5;
-          }else if(differenceNum>=9&&differenceNum<10){
-            additionScore+=6;
-          }else if(differenceNum>=10&&differenceNum<11){
-            additionScore+=7;
-          }else if(differenceNum>=11&&differenceNum<12){
-            additionScore+=8;
-          }else if(differenceNum>=12&&differenceNum<13){
-            additionScore+=9;
-          }else if(differenceNum>=13){
-            additionScore+=10;
-          }
-        }else if(situpNum2>=55){
-          pullupsitupScore= 95;
-        }else if(situpNum2>=53){
-          pullupsitupScore= 90;
-        }else if(situpNum2>=50){
-          pullupsitupScore= 85;
-        }else if(situpNum2>=47){
-          pullupsitupScore= 80;
-        }else if(situpNum2>=45){
-          pullupsitupScore= 78;
-        }else if(situpNum2>=43){
-          pullupsitupScore= 76;
-        }else if(situpNum2>=41){
-          pullupsitupScore= 74;
-        }else if(situpNum2>=39){
-          pullupsitupScore= 72;
-        }else if(situpNum2>=37){
-          pullupsitupScore= 70;
-        }else if(situpNum2>=35){
-          pullupsitupScore= 68;
-        }else if(situpNum2>=33){
-          pullupsitupScore= 66;
-        }else if(situpNum2>=31){
-          pullupsitupScore= 64;
-        }else if(situpNum2>=29){
-          pullupsitupScore= 62;
-        }else if(situpNum2>=27){
-          pullupsitupScore= 60;
-        }else if(situpNum2>=25){
-          pullupsitupScore= 50;
-        }else if(situpNum2>=23){
-          pullupsitupScore= 40;
-        }else if(situpNum2>=21){
-          pullupsitupScore= 30;
-        }else if(situpNum2>=19){
-          pullupsitupScore= 20;
-        }else if(situpNum2>=17){
-          pullupsitupScore= 10;
-        }
-      }
-
-      score = (BMIScore*.15+breathScore*.15+reachScore*.1+jumpScore*.1+shortrunScore*.2+longrunScore*.2+pullupsitupScore*.1+additionScore).toFixed(1);
-      result.textContent = score;
-      additionEl.textContent = additionScore;
-      totalLevelEl.textContent = scoreToLevel(parseFloat(score));
-
-      const bmiValid = BMI.value !== '';
-      setRow('bmi', bmiValid ? BMI.value : '', BMIScore, bmiValid);
-
-      const breathValid = breath !== '';
-      setRow('breath', breathValid ? breath : '', breathScore, breathValid);
-
-      const sprintValid = shortrun !== '';
-      setRow('sprint', sprintValid ? shortrun : '', shortrunScore, sprintValid);
-
-      const reachValid = reach !== '';
-      setRow('sitreach', reachValid ? reach : '', reachScore, reachValid);
-
-      const jumpValid = jump !== '';
-      setRow('longjump', jumpValid ? jump : '', jumpScore, jumpValid);
-
-      if(sex === 1){
-        const strengthValid = pullup !== '';
-        setRow('strength', strengthValid ? pullup : '', pullupsitupScore, strengthValid);
-        const enduranceValid = run1000 !== '';
-        setRow('endurance', enduranceValid ? run1000 : '', longrunScore, enduranceValid);
-      }else{
-        const strengthValid = situp !== '';
-        setRow('strength', strengthValid ? situp : '', pullupsitupScore, strengthValid);
-        const enduranceValid = run800 !== '';
-        setRow('endurance', enduranceValid ? run800 : '', longrunScore, enduranceValid);
-      }
-    };
-
-    document.onkeydown = function(e){
-      if(e.keyCode == 13){
-        document.getElementById('compute').click();
-      }
-    }
-
-    setupPersistence();
-  </script>
-</body>
+      setupPersistence();
+    </script>
+  </body>
 </html>
